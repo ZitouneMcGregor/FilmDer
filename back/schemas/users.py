@@ -11,10 +11,10 @@ class UsersUpdate(BaseModel):
     u_password: str = None
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class UsersOut(UsersBase):
     id: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
