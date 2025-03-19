@@ -2,7 +2,10 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
+/* Add these if not already present */
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
 @layer base {
     :root {
       --text: #210e0d;
@@ -18,5 +21,5 @@
       --secondary: #901e18;
       --accent: #e5281e;
     }
-  },
+  }
   
