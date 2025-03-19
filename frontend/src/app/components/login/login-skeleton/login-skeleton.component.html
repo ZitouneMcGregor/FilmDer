@@ -1,0 +1,7 @@
+<div class="min-h-screen bg-[var(--background)] flex items-center justify-center">
+    <div class="w-full max-w-md space-y-8">
+      <app-login-modal *ngIf="isLogin" (switch)="toggle()"></app-login-modal>
+      <app-register-modal *ngIf="!isLogin" (switch)="toggle()"></app-register-modal>
+    </div>
+  </div>
+  
