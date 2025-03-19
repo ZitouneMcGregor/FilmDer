@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: filmderBdd
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: "1234567aA*"  
+      MYSQL_DATABASE: "FilmDerDataBase"       
+    ports:
+      - "3336:3306"
+    volumes:
+      - ./bdd/bdd.sql:/docker-entrypoint-initdb.d/bdd.sql
+      - data:/var/lib/mysql
+
+volumes:
+  data:

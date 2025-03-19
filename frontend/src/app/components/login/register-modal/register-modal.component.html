@@ -1,0 +1,46 @@
+<div class="bg-white p-8 rounded-lg shadow-md text-[var(--text)]">
+    <h2 class="text-center text-2xl font-bold mb-6">Inscription</h2>
+    <form (ngSubmit)="onSubmit()">
+      <div>
+        <label for="registerPseudo" class="block text-sm font-medium">Pseudo</label>
+        <input
+          id="registerPseudo"
+          type="text"
+          name="pseudo"
+          placeholder="Votre pseudo"
+          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-[var(--primary)] focus:border-[var(--primary)]"
+        >
+      </div>
+      <div class="mt-4">
+        <label for="registerPassword" class="block text-sm font-medium">Mot de passe</label>
+        <input
+          id="registerPassword"
+          type="password"
+          name="password"
+          placeholder="Votre mot de passe"
+          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-[var(--primary)] focus:border-[var(--primary)]"
+        >
+      </div>
+      <div class="mt-4">
+        <label for="registerPassword" class="block text-sm font-medium">Confirmez votre mot de passe</label>
+        <input
+          id="registerPasswordConfirm"
+          type="password"
+          name="passwordConfirm"
+          placeholder="Votre mot de passe"
+          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-[var(--primary)] focus:border-[var(--primary)]"
+        >
+      </div>
+      <div class="mt-6">
+        <button type="submit" class="w-full py-2 px-4 bg-[var(--primary)] text-white rounded-md hover:bg-[var(--accent)]">
+          S'inscrire
+        </button>
+      </div>
+    </form>
+    <div class="mt-4 text-center">
+        <button type="button" (click)="onSwitch()" class="text-sm text-[var(--secondary)] hover:underline focus:outline-none">
+            Déjà un compte ? Se connecter
+        </button>
+    </div>
+  </div>
+  
