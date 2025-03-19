@@ -6,6 +6,13 @@ class UsersBase(BaseModel):
 class UsersCreate(UsersBase):
     u_password: str
 
+class UsersUpdate(BaseModel):
+    pseudo: str = None
+    u_password: str = None
+
+    class Config:
+        orm_mode = True
+
 class UsersOut(UsersBase):
     id: int
 
