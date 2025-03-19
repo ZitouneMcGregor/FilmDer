@@ -33,6 +33,7 @@ CREATE TABLE IF NOT EXISTS RoomMovie(
     id INT AUTO_INCREMENT PRIMARY KEY,
     room_id INT NOT NULL,
     movie_id INT NOT NULL,
+    index INT NOT NULL,
     
     FOREIGN KEY (room_id) REFERENCES Room(id)
 );
