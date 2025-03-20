@@ -1,32 +1,36 @@
 import { Component, inject } from '@angular/core';
-import { NgFor, NgClass } from '@angular/common';
+import { NgFor, NgClass, CommonModule} from '@angular/common';
 import { MovieService } from '../../../services/movie/movie.service';
 import { Movie } from '../../../services/movie/movie.service';
 
 @Component({
   selector: 'app-romm-play',
   standalone: true,
-  imports: [NgFor, NgClass], // ✅ HttpClientModule inclus
+  imports: [NgFor, NgClass, CommonModule],
   templateUrl: './romm-play.component.html',
   styleUrl: './romm-play.component.css',
-  providers: [MovieService] // ✅ Fournit le service directement ici
+  providers: [MovieService] 
 })
+
+
 export class RommPlayComponent {
-  movies: Movie[] = [];
+  userId = "123456"; // ID générique temporaire
+
+
+  // List tmp des films en attendant de les recup depuis le back
+  movies =  [
+    {"id": 1, "name": "Inception"},
+    {"id": 2, "name": "Interstellar"},
+    {"id": 3, "name": "The Matrix"},
+    {"id": 4, "name": "The Dark Knight"},
+    {"id": 5, "name": "Pulp Fiction"},
+]
+
+  // List des films likes/dislikes
+  userVotes: { userId: string; movieId: number; vote: 'like' | 'dislike' }[] = [];
+
   isAnimating = false;
   animationType: 'like' | 'dislike' | '' = '';
-  private movieService = inject(MovieService); // ✅ Utilisation de `inject()`, recommandé en Angular 18
-
-  constructor() {
-    this.fetchMovies();
-  }
-
-  fetchMovies() {
-    this.movieService.getMovies().subscribe({
-      next: (data) => this.movies = data,
-      error: (err) => console.error('Erreur lors de la récupération des films', err)
-    });
-  }
 
   removeMovie(type: 'like' | 'dislike') {
     if (this.movies.length > 0 && !this.isAnimating) {
@@ -34,10 +38,23 @@ export class RommPlayComponent {
       this.animationType = type;
 
       setTimeout(() => {
-        this.movies.shift();
+        const movie = this.movies.shift();
+        if (movie) {
+          this.userVotes.push({ userId: this.userId, movieId: movie.id, vote: type });
+        }
+
         this.isAnimating = false;
         this.animationType = '';
-      }, 400);
+
+        if (this.movies.length === 0) {
+          this.handleEndOfList();
+        }
+      }, 400); 
     }
+  }
+  handleEndOfList() {
+    // Renvoyer vers le back la liste des films likés pour choisir ensuite
+    // A Faire
+    alert("Plus de films à afficher !");
   }
 }

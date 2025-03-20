@@ -1,25 +1,33 @@
-<div class="bg-green-100 w-80 flex flex-col justify-center items-center">
-    <div class="relative w-80 h-96">
-        <div *ngFor="let movie of movies; let i = index" 
-             class="absolute w-full h-full bg-white rounded-lg shadow-lg transition-all duration-500"
-             [ngClass]="{
-               'animate-slide-right': i === 0 && isAnimating && animationType === 'like',
-               'animate-slide-left': i === 0 && isAnimating && animationType === 'dislike'
-             }"
-             [style.zIndex]="movies.length - i">
-          
-          <div class="p-4">
-            <h2 class="text-lg font-bold text-gray-800 text-center">{{ movie.name }}</h2>
-          </div>
-        </div>
+<div class="bg-green-100 flex flex-col items-center justify-center h-screen">
+    <div class="relative w-80 h-96 flex items-center justify-center">
+        <ng-container *ngIf="movies.length > 0; else endMessage">
+            <div *ngFor="let movie of movies; let i = index"
+                 class="absolute w-full h-full bg-white rounded-lg shadow-lg transition-all duration-500"
+                 [ngClass]="{
+                   'animate-slide-right': i === 0 && isAnimating && animationType === 'like',
+                   'animate-slide-left': i === 0 && isAnimating && animationType === 'dislike'
+                 }"
+                 [style.zIndex]="movies.length - i">
+              
+              <div class="p-4">
+                <h2 class="text-lg font-bold text-gray-800">{{ movie.name }}</h2>
+              </div>
+            </div>
+        </ng-container>
     </div>
+
+    <ng-template #endMessage>
+        <div class="w-80 h-96 flex items-center justify-center bg-white rounded-lg shadow-lg">
+            <p class="text-lg font-bold text-gray-800">Plus de films disponibles !</p>
+        </div>
+    </ng-template>
     
     <div class="mt-8 flex gap-4">
-        <button (click)="removeMovie('dislike')" class="px-6 py-3 bg-red-500 text-white rounded-full shadow-md hover:bg-red-600">
-          👎 Dislike
+        <button (click)="removeMovie('dislike')" class="px-6 py-3 bg-red-500 text-white rounded-full shadow-md hover:bg-red-600" [disabled]="movies.length === 0">
+          Dislike
         </button>
-        <button (click)="removeMovie('like')" class="px-6 py-3 bg-green-500 text-white rounded-full shadow-md hover:bg-green-600">
-          👍 Like
+        <button (click)="removeMovie('like')" class="px-6 py-3 bg-green-500 text-white rounded-full shadow-md hover:bg-green-600" [disabled]="movies.length === 0">
+            Like
         </button>
     </div>
 </div>
