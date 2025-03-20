@@ -1,0 +1,4 @@
+nanoid
+fastapi
+uvicorn
+pymysql

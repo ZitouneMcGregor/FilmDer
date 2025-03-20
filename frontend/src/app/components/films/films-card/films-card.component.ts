@@ -1,10 +1,5 @@
 import { Component, Input } from '@angular/core';
-
-interface Film {
-  image: string;
-  name: string;
-  note: number;
-}
+import { UserMovie } from '../../../services/userMovie/user-movie-service.service';
 
 @Component({
   selector: 'app-films-card',
@@ -14,5 +9,6 @@ interface Film {
   styleUrl: './films-card.component.css'
 })
 export class FilmsCardComponent {
-  @Input() film!: Film;
+  @Input() movie!: UserMovie;
+
 }
