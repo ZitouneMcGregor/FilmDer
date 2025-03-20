@@ -4,7 +4,7 @@ class UserMovieBase(BaseModel):
     user_id: int
     movie_id: int
     movie_img: str
-    movie_rating: int
+    movie_rating: float
     movie_name: str
 
 class UserMovieCreate(UserMovieBase):
