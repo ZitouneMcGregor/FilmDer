@@ -1,3 +1,25 @@
-la room play
-
-ici ca swipe, faudra mettre la card de jerem
+<div class="bg-green-100 w-80 flex flex-col justify-center items-center">
+    <div class="relative w-80 h-96">
+        <div *ngFor="let movie of movies; let i = index" 
+             class="absolute w-full h-full bg-white rounded-lg shadow-lg transition-all duration-500"
+             [ngClass]="{
+               'animate-slide-right': i === 0 && isAnimating && animationType === 'like',
+               'animate-slide-left': i === 0 && isAnimating && animationType === 'dislike'
+             }"
+             [style.zIndex]="movies.length - i">
+          
+          <div class="p-4">
+            <h2 class="text-lg font-bold text-gray-800 text-center">{{ movie.name }}</h2>
+          </div>
+        </div>
+    </div>
+    
+    <div class="mt-8 flex gap-4">
+        <button (click)="removeMovie('dislike')" class="px-6 py-3 bg-red-500 text-white rounded-full shadow-md hover:bg-red-600">
+          👎 Dislike
+        </button>
+        <button (click)="removeMovie('like')" class="px-6 py-3 bg-green-500 text-white rounded-full shadow-md hover:bg-green-600">
+          👍 Like
+        </button>
+    </div>
+</div>
