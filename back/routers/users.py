@@ -59,6 +59,14 @@ async def create_user_movie(user_id: int, movie: UserMovieCreate, db: Session = 
     if movie.user_id != user_id:
         raise HTTPException(status_code=400, detail="user_id mismatch between URL and payload")
     
+    existing_movie = db.query(UserMovie).filter(
+        UserMovie.user_id == user_id,
+        UserMovie.movie_id == movie.movie_id
+    ).first()
+    
+    if existing_movie:
+        raise HTTPException(status_code=400, detail="Ce film est déjà dans la liste de l'utilisateur")
+    
     db_movie = UserMovie(
         user_id=user_id,
         movie_id=movie.movie_id,
@@ -70,6 +78,7 @@ async def create_user_movie(user_id: int, movie: UserMovieCreate, db: Session = 
     db.commit()
     db.refresh(db_movie)
     return db_movie
+
 
 @router.put("/{user_id}/movies/{movie_id}", response_model=UserMovieOut)
 async def update_user_movie(user_id: int, movie_id: int, movie_update: UserMovieUpdate, db: Session = Depends(get_db)):
@@ -97,9 +106,6 @@ async def delete_user_movie(user_id: int, movie_id: int, db: Session = Depends(g
 
 @router.get("/{user_id}/rooms", response_model=List[RoomOut])
 async def get_rooms(user_id: int, db: Session = Depends(get_db)):
-    """
-    Récupère la liste de toutes les rooms
-    """
     rooms = db.query(Room).join(UserRoom, Room.id == UserRoom.room_id).filter(UserRoom.user_id == user_id, Room.close == 0).all()
     return rooms
 

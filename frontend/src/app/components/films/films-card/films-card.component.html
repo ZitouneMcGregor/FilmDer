@@ -8,7 +8,7 @@
   <div class="p-4">
     <h3 class="truncate text-xl font-bold text-[var(--text)]">{{ movie.movie_name }}</h3>
 
-    <!-- Affichage de la note (ou champ d'édition si en mode édition) -->
+
     <div class="mt-2">
       <ng-container *ngIf="!editing">
         <p class="text-sm text-gray-600">Votre note : {{ movie.movie_rating }}</p>
@@ -23,7 +23,7 @@
             [(ngModel)]="newNote"
             class="w-full h-1 bg-gray-300 rounded-lg appearance-none cursor-pointer focus:outline-none"
           >
-          <!-- Affichage de la valeur avec une taille de texte réduite -->
+
           <span class="text-sm font-medium text-[var(--text)]">{{ newNote }}</span>
         </div>
       </ng-container>
@@ -34,7 +34,6 @@
       <button (click)="showInfo()" 
               class="p-1 bg-blue-100 text-blue-600 rounded hover:bg-blue-200 focus:outline-none"
               title="Détails">
-        <!-- Icône info -->
         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
                 d="M13 16h-1v-4h-1m1-4h.01M12 22a10 10 0 100-20 10 10 0 000 20z" />
@@ -46,7 +45,6 @@
         <button (click)="startEditing()" 
                 class="p-1 bg-green-100 text-green-600 rounded hover:bg-green-200 focus:outline-none"
                 title="Modifier note">
-          <!-- Icône stylo -->
           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
                   d="M15.232 5.232l3.536 3.536M4 13v7h7l9-9-3.536-3.536L4 13z" />
@@ -57,7 +55,6 @@
         <button (click)="saveNote()" 
                 class="p-1 bg-green-500 text-white rounded hover:bg-green-600 focus:outline-none"
                 title="Enregistrer">
-          <!-- Icône check -->
           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
                   d="M5 13l4 4L19 7" />
@@ -66,7 +63,6 @@
         <button (click)="cancelEditing()" 
                 class="p-1 bg-gray-300 text-gray-800 rounded hover:bg-gray-400 focus:outline-none"
                 title="Annuler">
-          <!-- Icône croix -->
           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
                   d="M6 18L18 6M6 6l12 12" />
@@ -78,7 +74,6 @@
       <button (click)="deleteMovie()"
               class="p-1 bg-red-100 text-red-600 rounded hover:bg-red-200 focus:outline-none"
               title="Supprimer">
-        <!-- Icône poubelle -->
         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
                 d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M1 7h22M10 3h4a1 1 0 011 1v1H9V4a1 1 0 011-1z" />
@@ -103,7 +98,7 @@
             class="rounded-lg w-full object-cover"
           >
         </div>
-        <!-- Détails du film -->
+
         <div class="md:w-2/3 md:pl-6 mt-4 md:mt-0">
           <h2 class="text-2xl font-bold text-[var(--text)] mb-2">{{ movieDetails.title }}</h2>
           <p class="text-sm text-gray-600 mb-2">

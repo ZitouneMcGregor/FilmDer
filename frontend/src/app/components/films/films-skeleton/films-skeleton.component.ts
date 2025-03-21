@@ -27,6 +27,8 @@ export class FilmsSkeletonComponent {
   searchResults: any[] = [];
   showAddMovieModal: boolean = false;
   userId: number = 1;
+  selectedMovie: any = null;
+  newNote: number = 0;
 
   constructor(
     private tmdbService: TmdbServiceService,
@@ -40,7 +42,6 @@ export class FilmsSkeletonComponent {
   loadMovies(): void {
     this.userMovieService.getUserMovies(this.userId).subscribe({
       next: (data) => {
-        // Trie les films par ordre alphabétique sur le nom
         this.movies = data.sort((a, b) => a.movie_name.localeCompare(b.movie_name));
       },
       error: (err) => {
@@ -49,7 +50,6 @@ export class FilmsSkeletonComponent {
     });
   }
 
-  // Filtre les films de l'utilisateur en fonction de la recherche
   get filteredMovies(): UserMovie[] {
     if (!this.userSearchQuery.trim()) {
       return this.movies;
@@ -59,18 +59,23 @@ export class FilmsSkeletonComponent {
     );
   }
 
-  // Ouvre le modal pour ajouter un film
   openAddMovieModal(): void {
     this.showAddMovieModal = true;
+    this.searchQuery = '';
+    this.searchResults = [];
+    this.selectedMovie = null;
+    this.newNote = 0;
   }
 
-  // Ferme le modal et réinitialise la recherche TMDB
   closeAddMovieModal(): void {
     this.showAddMovieModal = false;
     this.searchQuery = '';
     this.searchResults = [];
+    this.selectedMovie = null;
+    this.newNote = 0;
   }
 
+  // Recherche des films sur TMDB
   searchMovies(): void {
     if (this.searchQuery.trim().length > 0) {
       this.tmdbService.searchMovies(this.searchQuery).subscribe({
@@ -86,19 +91,37 @@ export class FilmsSkeletonComponent {
     }
   }
 
-  addMovieFromSearch(result: any): void {
+  selectMovie(result: any): void {
+    this.tmdbService.getMovieDetails(result.id).subscribe({
+      next: details => {
+        this.selectedMovie = details;
+        this.newNote = 5;
+      },
+      error: err => {
+        console.error('Erreur lors de la récupération des détails', err);
+      }
+    });
+  }
+
+  addMovieFromSelected(): void {
+    if (!this.selectedMovie) return;
+    
+    const exists = this.movies.some(movie => movie.movie_id === this.selectedMovie.id);
+    if (exists) {
+      alert("Ce film est déjà dans votre liste !");
+      return;
+    }
+    
     const newMovie: UserMovie = {
       user_id: this.userId,
-      movie_id: result.id,
-      movie_img: result.poster_path,
-      movie_rating: result.vote_average,
-      movie_name: result.title
+      movie_id: this.selectedMovie.id,
+      movie_img: this.selectedMovie.poster_path,
+      movie_rating: this.newNote,
+      movie_name: this.selectedMovie.title
     };
-
     this.userMovieService.addUserMovie(this.userId, newMovie).subscribe({
       next: (movieAdded) => {
         this.movies.push(movieAdded);
-        // Re-trier après ajout
         this.movies.sort((a, b) => a.movie_name.localeCompare(b.movie_name));
         this.closeAddMovieModal();
       },
@@ -107,6 +130,7 @@ export class FilmsSkeletonComponent {
       }
     });
   }
+  
 
   onMovieDeleted(movieId: number): void {
     this.movies = this.movies.filter(movie => movie.id !== movieId);
@@ -118,4 +142,6 @@ export class FilmsSkeletonComponent {
       this.movies[index] = updatedMovie;
     }
   }
+
+
 }
