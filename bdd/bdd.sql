@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS Room(
     id_admin INT NOT NULL,
     nb_player INT NOT NULL,
     nb_film INT NOT NULL,
-    join_code VARCHAR(255) UNIQUE NOT NULL,
+    join_code VARCHAR(255) NOT NULL,
     name VARCHAR(255) NOT NULL,
     close INT NOT NULL DEFAULT 0,
     ready INT NOT NULL DEFAULT 0,
