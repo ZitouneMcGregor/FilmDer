@@ -4,7 +4,6 @@ from routers import users, room
 
 app = FastAPI()
 
-# Ajout du middleware CORS
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],

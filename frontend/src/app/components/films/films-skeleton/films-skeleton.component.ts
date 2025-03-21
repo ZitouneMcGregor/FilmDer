@@ -60,7 +60,7 @@ export class FilmsSkeletonComponent {
   }
 
   addMovieFromSearch(result: any): void {
-    // Crée un objet UserMovie à partir des données de TMDB
+
     const newMovie: UserMovie = {
       user_id: this.userId,
       movie_id: result.id,
@@ -69,12 +69,9 @@ export class FilmsSkeletonComponent {
       movie_name: result.title
     };
 
-    // Appel à l'API pour ajouter le film en base
     this.movieService.addUserMovie(this.userId, newMovie).subscribe({
       next: (movieAdded) => {
-        // Ajoute le film à la liste affichée
         this.movies.push(movieAdded);
-        // Réinitialise la recherche
         this.searchQuery = '';
         this.searchResults = [];
       },

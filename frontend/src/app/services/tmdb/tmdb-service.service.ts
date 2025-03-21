@@ -19,4 +19,9 @@ export class TmdbServiceService {
       map(response => response.results)
     );
   }
+
+  getMovieDetails(movieId: number): Observable<any> {
+    const url = `${this.apiUrl}/movie/${movieId}?api_key=${this.apiKey}`;
+    return this.http.get<any>(url);
+  }
 }
