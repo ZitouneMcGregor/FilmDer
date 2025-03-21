@@ -42,12 +42,13 @@ export class UserServiceService {
   
   
   isLoggedIn(): boolean {
-  if (!this.isBrowser()) return false;
-
-  const userId = localStorage.getItem("UserId");
-  return userId !== null && !isNaN(Number(userId));
-}
-
+    if (!this.isBrowser()) return false;
+      if (typeof window === "undefined" || typeof localStorage === "undefined") {
+      return false;
+    }
+    const userId = localStorage.getItem("UserId");
+    return userId !== null && !isNaN(Number(userId));
+  }
   
   
 
