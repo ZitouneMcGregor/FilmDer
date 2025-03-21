@@ -27,7 +27,11 @@
       <div class="w-full flex justify-center sm:justify-start flex-wrap gap-4">
         <app-films-card 
           *ngFor="let movie of filteredMovies" 
-          [movie]="movie">
+          [movie]="movie" 
+          [userId]="userId"
+          (movieDeleted)="onMovieDeleted($event)"
+          (movieUpdated)="onMovieUpdated($event)"
+          class="w-64 mb-4">
         </app-films-card>
       </div>
     </section>

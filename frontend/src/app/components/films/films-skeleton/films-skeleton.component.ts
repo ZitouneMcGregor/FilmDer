@@ -20,20 +20,12 @@ interface Film {
   styleUrl: './films-skeleton.component.css'
 })
 export class FilmsSkeletonComponent {
-  // Liste complète des films ajoutés par l'utilisateur (chargés depuis l'API)
-  movies: UserMovie[] = [];
-  
-  // Barre de recherche pour filtrer les films déjà ajoutés
-  userSearchQuery: string = '';
 
-  // Variables pour la recherche sur TMDB (dans le modal d'ajout)
+  movies: UserMovie[] = [];
+  userSearchQuery: string = '';
   searchQuery: string = '';
   searchResults: any[] = [];
-  
-  // Contrôle l'affichage du modal d'ajout de film
   showAddMovieModal: boolean = false;
-
-  // Pour cet exemple, on fixe l'ID de l'utilisateur à 1.
   userId: number = 1;
 
   constructor(
@@ -114,5 +106,16 @@ export class FilmsSkeletonComponent {
         console.error('Erreur lors de l\'ajout du film', err);
       }
     });
+  }
+
+  onMovieDeleted(movieId: number): void {
+    this.movies = this.movies.filter(movie => movie.id !== movieId);
+  }
+
+  onMovieUpdated(updatedMovie: UserMovie): void {
+    const index = this.movies.findIndex(movie => movie.id === updatedMovie.id);
+    if (index !== -1) {
+      this.movies[index] = updatedMovie;
+    }
   }
 }
