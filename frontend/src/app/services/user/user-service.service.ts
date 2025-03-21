@@ -42,11 +42,19 @@ export class UserServiceService {
   
   
   isLoggedIn(): boolean {
+<<<<<<< HEAD
     if (!this.isBrowser()) return false;
   
+=======
+    if (typeof window === "undefined" || typeof localStorage === "undefined") {
+      return false;
+    }
+>>>>>>> 653e6b3bf0e2ca24f3db450d10c76326a9ebcb65
     const userId = localStorage.getItem("UserId");
     return userId !== null && !isNaN(Number(userId));
   }
+  
+  
 
   registerUser(user: { pseudo: string; u_password: string }): Observable<any> {
     return this.http.post<any>(this.apiUrl, user);
