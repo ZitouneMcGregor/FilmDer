@@ -35,8 +35,15 @@ export class UserServiceService {
     localStorage.removeItem("UserId");
     this.router.navigate(['/login']);
   }
+
+  isBrowser(): boolean {
+    return typeof window !== 'undefined' && typeof localStorage !== 'undefined';
+  }
+  
   
   isLoggedIn(): boolean {
+    if (!this.isBrowser()) return false;
+  
     const userId = localStorage.getItem("UserId");
     return userId !== null && !isNaN(Number(userId));
   }

@@ -26,7 +26,7 @@ export class FilmsSkeletonComponent {
   searchQuery: string = '';
   searchResults: any[] = [];
   showAddMovieModal: boolean = false;
-  userId: number = 1;
+  userId: number = Number(localStorage.getItem("UserId"));
   selectedMovie: any = null;
   newNote: number = 0;
 
