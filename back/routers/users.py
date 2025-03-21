@@ -3,7 +3,10 @@ from sqlalchemy.orm import Session
 from typing import List
 
 from database import get_db
+from models.room import Room
+from models.userRoom import UserRoom
 from models.users import Users
+from schemas.room import RoomOut
 from schemas.users import UsersCreate, UsersOut, UsersUpdate
 from schemas.userMovie import *
 from models.userMovie import UserMovie
@@ -41,7 +44,6 @@ async def update_user(user_id: int, users_update: UsersUpdate, db: Session = Dep
     db.commit()
     db.refresh(db_users)
     return db_users
-
 
 #############
 # UserMovie #
@@ -92,3 +94,12 @@ async def delete_user_movie(user_id: int, movie_id: int, db: Session = Depends(g
     db.delete(db_movie)
     db.commit()
     return db_movie
+
+@router.get("/{user_id}/rooms", response_model=List[RoomOut])
+async def get_rooms(user_id: int, db: Session = Depends(get_db)):
+    """
+    Récupère la liste de toutes les rooms
+    """
+    rooms = db.query(Room).join(UserRoom, Room.id == UserRoom.room_id).filter(UserRoom.user_id == user_id, Room.close == 0).all()
+    return rooms
+
