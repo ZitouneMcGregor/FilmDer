@@ -28,4 +28,12 @@ export class UserMovieServiceService {
     return this.http.post<UserMovie>(`${this.apiUrl}/${userId}/movies`, movie);
   }
 
+  updateUserMovie(userId: number, movieId: number, movie: Partial<UserMovie>): Observable<UserMovie> {
+    return this.http.put<UserMovie>(`${this.apiUrl}/${userId}/movies/${movieId}`, movie);
+  }
+  
+  deleteUserMovie(userId: number, movieId: number): Observable<UserMovie> {
+    return this.http.delete<UserMovie>(`${this.apiUrl}/${userId}/movies/${movieId}`);
+  }  
+
 }
