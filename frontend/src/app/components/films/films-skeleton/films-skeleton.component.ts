@@ -11,7 +11,7 @@ interface Film {
   name: string;
   note: number;
 }
-
+ 
 @Component({
   selector: 'app-films-skeleton',
   standalone: true,
@@ -20,28 +20,63 @@ interface Film {
   styleUrl: './films-skeleton.component.css'
 })
 export class FilmsSkeletonComponent {
-  // Pour l'exemple, on fixe l'ID de l'utilisateur à 1.
-  userId: number = 1;
+  // Liste complète des films ajoutés par l'utilisateur (chargés depuis l'API)
   movies: UserMovie[] = [];
   
-  // Variables pour la recherche sur TMDB
+  // Barre de recherche pour filtrer les films déjà ajoutés
+  userSearchQuery: string = '';
+
+  // Variables pour la recherche sur TMDB (dans le modal d'ajout)
   searchQuery: string = '';
   searchResults: any[] = [];
+  
+  // Contrôle l'affichage du modal d'ajout de film
+  showAddMovieModal: boolean = false;
+
+  // Pour cet exemple, on fixe l'ID de l'utilisateur à 1.
+  userId: number = 1;
 
   constructor(
-    private movieService: UserMovieServiceService,
-    private tmdbService: TmdbServiceService
-  ) { }
+    private tmdbService: TmdbServiceService,
+    private userMovieService: UserMovieServiceService
+  ) {}
 
   ngOnInit(): void {
     this.loadMovies();
   }
 
   loadMovies(): void {
-    this.movieService.getUserMovies(this.userId).subscribe({
-      next: data => this.movies = data,
-      error: err => console.error('Erreur lors du chargement des films', err)
+    this.userMovieService.getUserMovies(this.userId).subscribe({
+      next: (data) => {
+        // Trie les films par ordre alphabétique sur le nom
+        this.movies = data.sort((a, b) => a.movie_name.localeCompare(b.movie_name));
+      },
+      error: (err) => {
+        console.error('Erreur lors du chargement des films', err);
+      }
     });
+  }
+
+  // Filtre les films de l'utilisateur en fonction de la recherche
+  get filteredMovies(): UserMovie[] {
+    if (!this.userSearchQuery.trim()) {
+      return this.movies;
+    }
+    return this.movies.filter(movie =>
+      movie.movie_name.toLowerCase().includes(this.userSearchQuery.toLowerCase())
+    );
+  }
+
+  // Ouvre le modal pour ajouter un film
+  openAddMovieModal(): void {
+    this.showAddMovieModal = true;
+  }
+
+  // Ferme le modal et réinitialise la recherche TMDB
+  closeAddMovieModal(): void {
+    this.showAddMovieModal = false;
+    this.searchQuery = '';
+    this.searchResults = [];
   }
 
   searchMovies(): void {
@@ -60,20 +95,20 @@ export class FilmsSkeletonComponent {
   }
 
   addMovieFromSearch(result: any): void {
-
     const newMovie: UserMovie = {
       user_id: this.userId,
       movie_id: result.id,
       movie_img: result.poster_path,
-      movie_rating: result.vote_average, // Vous pouvez ajuster ou demander une note à l'utilisateur
+      movie_rating: result.vote_average,
       movie_name: result.title
     };
 
-    this.movieService.addUserMovie(this.userId, newMovie).subscribe({
+    this.userMovieService.addUserMovie(this.userId, newMovie).subscribe({
       next: (movieAdded) => {
         this.movies.push(movieAdded);
-        this.searchQuery = '';
-        this.searchResults = [];
+        // Re-trier après ajout
+        this.movies.sort((a, b) => a.movie_name.localeCompare(b.movie_name));
+        this.closeAddMovieModal();
       },
       error: (err) => {
         console.error('Erreur lors de l\'ajout du film', err);
