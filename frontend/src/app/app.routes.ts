@@ -4,12 +4,14 @@ import { HomeSkeletonComponent } from './components/home/home-skeleton/home-skel
 import { LoginSkeletonComponent } from './components/login/login-skeleton/login-skeleton.component';
 import { PlaySkeletonComponent } from './components/play/play-skeleton/play-skeleton.component';
 import { FilmsSkeletonComponent } from './components/films/films-skeleton/films-skeleton.component';
+import { AuthGuard } from './guards/authGuard/auth-guard.guard';
+import { LoginGuard } from './guards/loginGuard/login-guard.guard';
 
 export const routes: Routes = [
-    { path: 'home', component: HomeSkeletonComponent },
-    { path: 'login', component: LoginSkeletonComponent },
-    { path: 'play', component: PlaySkeletonComponent},
-    { path: 'films', component: FilmsSkeletonComponent},
+    { path: 'home', component: HomeSkeletonComponent, canActivate: [AuthGuard] },
+    { path: 'login', component: LoginSkeletonComponent, canActivate: [LoginGuard]},
+    { path: 'play', component: PlaySkeletonComponent, canActivate: [AuthGuard]},
+    { path: 'films', component: FilmsSkeletonComponent, canActivate: [AuthGuard]},
     { path: '',   redirectTo: '/home', pathMatch: 'full' },
     { path: '**', component: NotFoundComponent }
 ];
