@@ -7,7 +7,8 @@ import { HeaderComponent } from "./components/shared/header/header.component";
   standalone: true,
   imports: [
     HeaderComponent,
-    RouterOutlet],
+    RouterOutlet,
+    ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
