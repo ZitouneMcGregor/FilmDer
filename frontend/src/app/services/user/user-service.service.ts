@@ -37,9 +37,14 @@ export class UserServiceService {
   }
   
   isLoggedIn(): boolean {
+    if (typeof window === "undefined" || typeof localStorage === "undefined") {
+      return false;
+    }
     const userId = localStorage.getItem("UserId");
     return userId !== null && !isNaN(Number(userId));
   }
+  
+  
 
   registerUser(user: { pseudo: string; u_password: string }): Observable<any> {
     return this.http.post<any>(this.apiUrl, user);
