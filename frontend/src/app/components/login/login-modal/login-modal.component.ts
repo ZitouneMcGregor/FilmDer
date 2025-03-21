@@ -26,7 +26,7 @@ export class LoginModalComponent {
         this.router.navigateByUrl('/home');
       } else {
         console.log('Échec de la connexion');
-        alert("Identifiant ou mot de passe incorrecte")
+        alert("Identifiant ou mot de passe incorrect")
       }
     });
   }
