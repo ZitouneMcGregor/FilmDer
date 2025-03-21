@@ -1,11 +1,10 @@
 <div class="w-full max-w-6xl mx-auto mt-5 px-8 py-6 bg-[var(--background)] rounded-lg shadow-md">
-  <h2 class="text-2xl font-bold text-center mb-6 text-[var(--text)]">Créer une Room</h2>
+  <h2 class="text-2xl font-bold text-center mb-6 text-[var(--text)]">Créer une Partie</h2>
 
   <form (ngSubmit)="onSubmit()" #roomForm="ngForm">
     
-    <!-- Nom de la Room -->
     <div class="mb-4">
-      <label for="name" class="block text-sm font-medium text-[var(--text)]">Nom de la Room</label>
+      <label for="name" class="block text-sm font-medium text-[var(--text)]">Nom de la Partie</label>
       <input
         type="text"
         id="name"
@@ -21,7 +20,7 @@
         placeholder="Nom de la room"
       />
       <p *ngIf="(nameInput.invalid && nameInput.dirty) || (submitted && nameInput.invalid)" class="text-red-500 text-xs mt-1">
-        Le nom de la room est requis.
+        Le nom de la partie est requis.
       </p>
     </div>
 
@@ -76,12 +75,12 @@
       type="submit"
       class="w-full py-2 px-4 bg-[var(--primary)] text-white font-semibold rounded-md hover:bg-[var(--secondary)] focus:outline-none"
     >
-      Créer la Room
+      Créer la partie
     </button>
 
     <!-- Message d'erreur global si le formulaire est invalide -->
     <p *ngIf="submitted && !roomForm.valid" class="text-red-500 text-sm mt-2 text-center">
-      Veuillez remplir correctement tous les champs avant de créer la room.
+      Veuillez remplir correctement tous les champs avant de créer la partie.
     </p>
 
   </form>

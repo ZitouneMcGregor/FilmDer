@@ -22,3 +22,4 @@ class RoomOut(RoomBase):
 
     class Config:
         from_attributes = True
+

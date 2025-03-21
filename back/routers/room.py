@@ -9,7 +9,7 @@ from database import get_db
 from models.room import Room
 from models.userRoom import UserRoom
 from schemas.room import RoomOut, RoomCreate
-from schemas.userRoom import UserRoomCreate, UserRoomOut
+from schemas.userRoom import UserRoomCreate, UserRoomOut, UserRoomNumber
 
 from utils.room import get_unique_join_code
 
@@ -32,7 +32,7 @@ def get_movies():
 ]
 
     return movies
-@router.post("/}", response_model=RoomOut)
+@router.post("/", response_model=RoomOut)
 async def create_room(room: RoomCreate, db: Session = Depends(get_db)):
     """
     Crée une nouvelle room
@@ -47,32 +47,32 @@ async def create_room(room: RoomCreate, db: Session = Depends(get_db)):
 
 
 @router.post("/{room_id}/users", response_model=UserRoomOut)
-async def create_userRoom(userRoom: UserRoomCreate, db: Session = Depends(get_db)):
+async def create_userRoom(room_id: int,userRoom: UserRoomCreate, db: Session = Depends(get_db)):
     """
     Join room
     """
-    db_room = db.query(Room).filter(room_id = userRoom.room_id).first()
+    db_room = db.query(Room).filter(Room.id == room_id).first()
 
     if db_room is None:
         raise HTTPException(status_code=404, detail="Room not found")
 
-    nb_player = db.query(UserRoom).filter(UserRoom.room_id == userRoom.room_id).count()
+    nb_player = db.query(UserRoom).filter(UserRoom.room_id == room_id).count()
 
-    if nb_player + 1 > userRoom.nb_player:
+    if nb_player + 1 > db_room.nb_player:
         raise HTTPException(status_code=409, detail="Room is full")
 
-    db_userRoom = db.query(UserRoom).filter(user_id = userRoom.user_id, room_id = userRoom.room_id ).first()
+    db_userRoom = db.query(UserRoom).filter(UserRoom.user_id == userRoom.user_id, UserRoom.room_id == room_id ).first()
 
     if db_userRoom is not None:
         raise HTTPException(status_code=409, detail="UserRoom existe")
 
-    db_userRoom = UserRoom(user_id = userRoom.user_id, room_id =userRoom.room_id)
+    db_userRoom = UserRoom(user_id = userRoom.user_id, room_id =room_id)
     db.add(db_userRoom)
     db.commit()
     db.refresh(db_userRoom)
     return db_userRoom
 
-@router.get("join/{join_code}", response_model=RoomOut)
+@router.get("/join/{join_code}", response_model=RoomOut)
 async def get_room_by_join_code(join_code: str, db: Session = Depends(get_db)):
     """
     Récupère une room grâce à son join_code.
@@ -134,3 +134,16 @@ async def start_room(user_id: int, room_id: int, db: Session = Depends(get_db)):
     db.refresh(room)
 
     return room
+
+@router.get("/{room_id}/players", response_model=UserRoomNumber)
+async def get_room_players(room_id: int, db: Session = Depends(get_db)):
+    """
+    Récupérer le nombre de joueur de la room
+    """
+    room = db.query(Room).filter(Room.id == room_id).first()
+    if room is None:
+        raise HTTPException(status_code=404, detail="Room not found")
+    nb_players = db.query(UserRoom).filter(UserRoom.room_id == room_id).count()
+
+
+    return UserRoomNumber(room_id = room_id, nb_players= nb_players)

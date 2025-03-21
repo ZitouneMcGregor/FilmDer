@@ -16,3 +16,7 @@ class UserRoomOut(UserRoomBase):
 
     class Config:
         from_attributes = True
+
+class UserRoomNumber(BaseModel):
+    room_id: int
+    nb_players: int
