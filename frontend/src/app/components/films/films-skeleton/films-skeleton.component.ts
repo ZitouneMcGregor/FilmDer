@@ -11,7 +11,7 @@ interface Film {
   name: string;
   note: number;
 }
-
+ 
 @Component({
   selector: 'app-films-skeleton',
   standalone: true,
@@ -20,30 +20,62 @@ interface Film {
   styleUrl: './films-skeleton.component.css'
 })
 export class FilmsSkeletonComponent {
-  // Pour l'exemple, on fixe l'ID de l'utilisateur à 1.
-  userId: number = 1;
+
   movies: UserMovie[] = [];
-  
-  // Variables pour la recherche sur TMDB
+  userSearchQuery: string = '';
   searchQuery: string = '';
   searchResults: any[] = [];
+  showAddMovieModal: boolean = false;
+  userId: number = Number(localStorage.getItem("UserId"));
+  selectedMovie: any = null;
+  newNote: number = 0;
 
   constructor(
-    private movieService: UserMovieServiceService,
-    private tmdbService: TmdbServiceService
-  ) { }
+    private tmdbService: TmdbServiceService,
+    private userMovieService: UserMovieServiceService
+  ) {}
 
   ngOnInit(): void {
     this.loadMovies();
   }
 
   loadMovies(): void {
-    this.movieService.getUserMovies(this.userId).subscribe({
-      next: data => this.movies = data,
-      error: err => console.error('Erreur lors du chargement des films', err)
+    this.userMovieService.getUserMovies(this.userId).subscribe({
+      next: (data) => {
+        this.movies = data.sort((a, b) => a.movie_name.localeCompare(b.movie_name));
+      },
+      error: (err) => {
+        console.error('Erreur lors du chargement des films', err);
+      }
     });
   }
 
+  get filteredMovies(): UserMovie[] {
+    if (!this.userSearchQuery.trim()) {
+      return this.movies;
+    }
+    return this.movies.filter(movie =>
+      movie.movie_name.toLowerCase().includes(this.userSearchQuery.toLowerCase())
+    );
+  }
+
+  openAddMovieModal(): void {
+    this.showAddMovieModal = true;
+    this.searchQuery = '';
+    this.searchResults = [];
+    this.selectedMovie = null;
+    this.newNote = 0;
+  }
+
+  closeAddMovieModal(): void {
+    this.showAddMovieModal = false;
+    this.searchQuery = '';
+    this.searchResults = [];
+    this.selectedMovie = null;
+    this.newNote = 0;
+  }
+
+  // Recherche des films sur TMDB
   searchMovies(): void {
     if (this.searchQuery.trim().length > 0) {
       this.tmdbService.searchMovies(this.searchQuery).subscribe({
@@ -59,25 +91,57 @@ export class FilmsSkeletonComponent {
     }
   }
 
-  addMovieFromSearch(result: any): void {
+  selectMovie(result: any): void {
+    this.tmdbService.getMovieDetails(result.id).subscribe({
+      next: details => {
+        this.selectedMovie = details;
+        this.newNote = 5;
+      },
+      error: err => {
+        console.error('Erreur lors de la récupération des détails', err);
+      }
+    });
+  }
 
+  addMovieFromSelected(): void {
+    if (!this.selectedMovie) return;
+    
+    const exists = this.movies.some(movie => movie.movie_id === this.selectedMovie.id);
+    if (exists) {
+      alert("Ce film est déjà dans votre liste !");
+      return;
+    }
+    
     const newMovie: UserMovie = {
       user_id: this.userId,
-      movie_id: result.id,
-      movie_img: result.poster_path,
-      movie_rating: result.vote_average, // Vous pouvez ajuster ou demander une note à l'utilisateur
-      movie_name: result.title
+      movie_id: this.selectedMovie.id,
+      movie_img: this.selectedMovie.poster_path,
+      movie_rating: this.newNote,
+      movie_name: this.selectedMovie.title
     };
-
-    this.movieService.addUserMovie(this.userId, newMovie).subscribe({
+    this.userMovieService.addUserMovie(this.userId, newMovie).subscribe({
       next: (movieAdded) => {
         this.movies.push(movieAdded);
-        this.searchQuery = '';
-        this.searchResults = [];
+        this.movies.sort((a, b) => a.movie_name.localeCompare(b.movie_name));
+        this.closeAddMovieModal();
       },
       error: (err) => {
         console.error('Erreur lors de l\'ajout du film', err);
       }
     });
   }
+  
+
+  onMovieDeleted(movieId: number): void {
+    this.movies = this.movies.filter(movie => movie.id !== movieId);
+  }
+
+  onMovieUpdated(updatedMovie: UserMovie): void {
+    const index = this.movies.findIndex(movie => movie.id === updatedMovie.id);
+    if (index !== -1) {
+      this.movies[index] = updatedMovie;
+    }
+  }
+
+
 }

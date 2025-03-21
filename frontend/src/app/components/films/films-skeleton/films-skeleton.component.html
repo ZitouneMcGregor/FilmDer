@@ -1,60 +1,136 @@
-<div class="min-h-screen bg-[var(--background)] p-4 pb-20">
-  <header class="mb-4">
-    <h2 class="text-3xl font-bold text-[var(--text)]">Mes Films</h2>
-  </header>
+<div class="min-h-screen bg-[var(--background)]">
+  <div class="container mx-auto p-6">
+    <!-- Header -->
+    <header class="flex flex-col sm:flex-row items-center justify-between">
+      <h1 class="text-4xl font-bold text-[var(--text)]">Mes Films</h1>
+      <button 
+        (click)="openAddMovieModal()" 
+        class="mt-4 sm:mt-0 px-4 py-2 bg-[var(--primary)] text-[var(--text)] rounded shadow hover:bg-[var(--accent)] transition">
+        Ajouter un film
+      </button>
+    </header>
 
-  <!-- Barre de recherche pour TMDB -->
-  <div class="mb-6 max-w-md mx-auto">
-    <div class="flex flex-col gap-2">
+    <!-- Barre de recherche pour filtrer les films déjà ajoutés -->
+    <div class="mt-6">
       <input 
         type="text" 
-        placeholder="Rechercher un film sur TMDB..."
-        [(ngModel)]="searchQuery"
-        class="p-2 border border-gray-300 rounded focus:outline-none"
-      >
-      <button 
-        type="button"
-        (click)="searchMovies()"
-        class="p-2 bg-[var(--primary)] text-[var(--text)] rounded hover:bg-[var(--accent)] focus:outline-none"
-      >
-        Rechercher
-      </button>
+        [(ngModel)]="userSearchQuery" 
+        placeholder="Rechercher dans vos films..."
+        class="w-full p-3 border border-gray-300 rounded focus:outline-none"
+      />
     </div>
+
+
+    
+    <!-- Grille des films ajoutés -->
+    <section class="mt-8 sm:ml-20">
+      <div class="w-full flex justify-center sm:justify-start flex-wrap gap-4">
+        <app-films-card 
+          *ngFor="let movie of filteredMovies" 
+          [movie]="movie" 
+          [userId]="userId"
+          (movieDeleted)="onMovieDeleted($event)"
+          (movieUpdated)="onMovieUpdated($event)"
+          class="w-64 mb-4">
+        </app-films-card>
+      </div>
+    </section>
   </div>
 
-  <!-- Résultats de la recherche -->
-  <div *ngIf="searchResults?.length" class="mb-6 max-w-4xl mx-auto">
-    <h3 class="text-xl font-bold text-[var(--text)] mb-2">Résultats</h3>
-    <div class="grid gap-4 justify-center grid-cols-[repeat(auto-fit,minmax(14rem,1fr))]">
-      <div *ngFor="let result of searchResults" class="bg-white rounded-lg shadow-md overflow-hidden w-56">
-        <div class="relative w-full aspect-[2/3]">
-          <img 
-            [src]="'https://image.tmdb.org/t/p/w300_and_h450_bestv2/' + result.poster_path" 
-            alt="{{ result.title }}" 
-            class="absolute inset-0 w-full h-full object-cover"
-          >
+
+
+  <!-- Modal d'ajout de film -->
+  <div *ngIf="showAddMovieModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60">
+    <div class="bg-white rounded-lg shadow-xl w-full max-w-3xl max-h-[90vh] overflow-y-auto p-6 relative">
+      <!-- Bouton de fermeture -->
+      <button (click)="closeAddMovieModal()" class="absolute top-4 right-4 text-gray-600 hover:text-gray-800 text-3xl">
+        &times;
+      </button>
+
+      <div class="space-y-6">
+        <!-- Mode Recherche -->
+        <div *ngIf="!selectedMovie">
+          <h2 class="text-2xl font-bold text-[var(--text)]">Ajouter un film</h2>
+          <div class="mt-4">
+            <input 
+              type="text" 
+              [(ngModel)]="searchQuery" 
+              placeholder="Rechercher un film sur TMDB..." 
+              class="w-full p-3 border border-gray-300 rounded focus:outline-none"
+            />
+          </div>
+          <div class="mt-4">
+            <button 
+              (click)="searchMovies()" 
+              class="w-full px-4 py-2 bg-[var(--primary)] text-[var(--text)] rounded shadow hover:bg-[var(--accent)] transition">
+              Rechercher
+            </button>
+          </div>
+          <!-- Résultats de la recherche -->
+          <div *ngIf="searchResults?.length" class="mt-6">
+            <h3 class="text-xl font-semibold text-[var(--text)] mb-4">Résultats</h3>
+            <div class="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
+              <div 
+                *ngFor="let result of searchResults" 
+                class="bg-gray-100 rounded-lg shadow overflow-hidden cursor-pointer transition hover:scale-105"
+                (click)="selectMovie(result)">
+                <div class="relative w-full aspect-[2/3]">
+                  <img 
+                    [src]="'https://image.tmdb.org/t/p/w300_and_h450_bestv2/' + result.poster_path" 
+                    alt="{{ result.title }}" 
+                    class="absolute inset-0 w-full h-full object-cover"
+                  >
+                </div>
+                <div class="p-3">
+                  <h4 class="truncate text-lg font-bold text-[var(--text)]">{{ result.title }}</h4>
+                  <p class="text-sm text-gray-600">Sorti : {{ result.release_date }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="p-2">
-          <h4 class="text-lg font-bold text-[var(--text)]">{{ result.title }}</h4>
-          <p class="text-sm text-gray-600">Sorti: {{ result.release_date }}</p>
-          <button 
-            type="button" 
-            (click)="addMovieFromSearch(result)" 
-            class="mt-2 w-full p-1 bg-[var(--primary)] text-[var(--text)] rounded hover:bg-[var(--accent)] focus:outline-none"
-          >
-            Ajouter
-          </button>
+
+        <!-- Mode Détail -->
+        <div *ngIf="selectedMovie">
+          <h2 class="text-2xl font-bold text-[var(--text)] mb-4">{{ selectedMovie.title }}</h2>
+          <div class="flex flex-col md:flex-row">
+            <div class="md:w-1/3">
+              <img 
+                [src]="'https://image.tmdb.org/t/p/w300_and_h450_bestv2/' + selectedMovie.poster_path" 
+                alt="{{ selectedMovie.title }}" 
+                class="rounded-lg w-full object-cover"
+              >
+            </div>
+            <div class="md:w-2/3 md:pl-6 mt-4 md:mt-0 space-y-4">
+              <p class="text-gray-700">{{ selectedMovie.overview }}</p>
+              <p class="text-sm text-gray-600">
+                Sorti le {{ selectedMovie.release_date }} | Durée : {{ selectedMovie.runtime }} min
+              </p>
+              <!-- Slider pour ajuster la note -->
+              <div class="flex items-center space-x-2">
+                <input 
+                  type="range" 
+                  min="0" 
+                  max="10" 
+                  step="1" 
+                  [(ngModel)]="newNote"
+                  class="w-full h-1 bg-gray-300 rounded-lg appearance-none cursor-pointer focus:outline-none"
+                >
+                <span class="text-sm font-medium text-[var(--text)]">{{ newNote }}</span>
+              </div>
+              <div>
+                <button 
+                  (click)="addMovieFromSelected()" 
+                  class="w-full px-4 py-2 bg-[var(--primary)] text-[var(--text)] rounded shadow hover:bg-[var(--accent)] transition">
+                  Ajouter ce film
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
+
       </div>
     </div>
   </div>
-
-  <!-- Grille des films déjà ajoutés -->
-  <div class="w-full flex justify-center sm:justify-start flex-wrap gap-4">
-    <app-films-card 
-      *ngFor="let movie of movies" 
-      [movie]="movie" 
-      class="w-64 mb-4"
-    ></app-films-card>
-  </div>
+  
 </div>

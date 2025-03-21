@@ -15,5 +15,3 @@ app.add_middleware(
 app.include_router(users.router, prefix="/users", tags=["users"])
 
 app.include_router(room.router, prefix="/rooms", tags=["room"])
-
-
