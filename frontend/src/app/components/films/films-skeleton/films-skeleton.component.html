@@ -1,32 +1,46 @@
-La en gros faudra bel affichage et boucle *ngFor sur la liste des films de l'user
-du coup c'est *ngFor temp de liste ( < app-films-card [datajsp]="temp">)
-
-quand on clique sur details ca ouvre le < app-films-modal [datajsp]="temp" > et la ca fait une requete pour afficher
-
-Faut aussi une barre de texte pour rajouter un film + sa note
-
 <div class="min-h-screen bg-[var(--background)] p-4 pb-20">
-    <header class="mb-4">
-      <h2 class="text-3xl font-bold text-[var(--text)]">Mes Films</h2>
-    </header>
-  
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-      <app-films-card *ngFor="let film of films" [film]="film"></app-films-card>
+  <header class="mb-4">
+    <h2 class="text-3xl font-bold text-[var(--text)]">Mes Films</h2>
+  </header>
+
+  <!-- Barre de recherche pour TMDB -->
+  <div class="mb-6 max-w-md mx-auto">
+    <div class="flex flex-col gap-2">
+      <input 
+        type="text" 
+        placeholder="Rechercher un film sur TMDB..."
+        [(ngModel)]="searchQuery"
+        class="p-2 border border-gray-300 rounded focus:outline-none"
+      >
+      <button 
+        type="button"
+        (click)="searchMovies()"
+        class="p-2 bg-[var(--primary)] text-[var(--text)] rounded hover:bg-[var(--accent)] focus:outline-none"
+      >
+        Rechercher
+      </button>
     </div>
-  
-    <div class="fixed bottom-0 left-0 right-0 bg-white p-4 shadow-t">
-      <div class="max-w-md mx-auto">
-        <div class="flex">
-          <input 
-            type="text" 
-            placeholder="Ajouter un nouveau film"
-            [(ngModel)]="newFilmSearch"
-            class="flex-1 p-2 border border-gray-300 rounded-l focus:outline-none"
+  </div>
+
+  <!-- Résultats de la recherche -->
+  <div *ngIf="searchResults?.length" class="mb-6 max-w-4xl mx-auto">
+    <h3 class="text-xl font-bold text-[var(--text)] mb-2">Résultats</h3>
+    <div class="grid gap-4 justify-center grid-cols-[repeat(auto-fit,minmax(14rem,1fr))]">
+      <div *ngFor="let result of searchResults" class="bg-white rounded-lg shadow-md overflow-hidden w-56">
+        <div class="relative w-full aspect-[2/3]">
+          <img 
+            [src]="'https://image.tmdb.org/t/p/w300_and_h450_bestv2/' + result.poster_path" 
+            alt="{{ result.title }}" 
+            class="absolute inset-0 w-full h-full object-cover"
           >
+        </div>
+        <div class="p-2">
+          <h4 class="text-lg font-bold text-[var(--text)]">{{ result.title }}</h4>
+          <p class="text-sm text-gray-600">Sorti: {{ result.release_date }}</p>
           <button 
-            type="button"
-            (click)="addFilm()"
-            class="p-2 bg-[var(--primary)] text-[var(--text)] rounded-r hover:bg-[var(--accent)] focus:outline-none"
+            type="button" 
+            (click)="addMovieFromSearch(result)" 
+            class="mt-2 w-full p-1 bg-[var(--primary)] text-[var(--text)] rounded hover:bg-[var(--accent)] focus:outline-none"
           >
             Ajouter
           </button>
@@ -34,4 +48,13 @@ Faut aussi une barre de texte pour rajouter un film + sa note
       </div>
     </div>
   </div>
-  
+
+  <!-- Grille des films déjà ajoutés -->
+  <div class="w-full flex justify-center sm:justify-start flex-wrap gap-4">
+    <app-films-card 
+      *ngFor="let movie of movies" 
+      [movie]="movie" 
+      class="w-64 mb-4"
+    ></app-films-card>
+  </div>
+</div>
