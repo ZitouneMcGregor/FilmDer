@@ -4,15 +4,14 @@ from routers import users, room
 
 app = FastAPI()
 
-# Configuration CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:4200"],  # Autorise Angular
+    allow_origins=["*"],
     allow_credentials=True,
-    allow_methods=["*"],  # Autorise toutes les méthodes HTTP
-    allow_headers=["*"],  # Autorise tous les headers
+    allow_methods=["*"],
+    allow_headers=["*"], 
 )
 
-# Inclusion des routes
 app.include_router(users.router, prefix="/users", tags=["users"])
-app.include_router(room.router, prefix="/room", tags=["room"])
+
+app.include_router(room.router, prefix="/rooms", tags=["room"])
