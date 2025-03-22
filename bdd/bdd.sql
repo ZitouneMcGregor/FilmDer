@@ -1,3 +1,4 @@
+
 CREATE DATABASE IF NOT EXISTS FilmDerDataBase;
 
 
@@ -39,7 +40,7 @@ CREATE TABLE IF NOT EXISTS RoomMovie(
     room_id INT NOT NULL,
     movie_id INT NOT NULL,
     movie_index INT NOT NULL,
-    
+    nb_likes INT DEFAULT 0,
     FOREIGN KEY (room_id) REFERENCES Room(id)
 );
 
