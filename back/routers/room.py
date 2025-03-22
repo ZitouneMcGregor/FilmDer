@@ -6,9 +6,9 @@ from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 from database import get_db
-from models.room import Room
+from models.room import Room, RoomMovie
 from models.userRoom import UserRoom
-from schemas.room import RoomOut, RoomCreate, RoomJoin
+from schemas.room import MovieSchema, RoomMovieCreate, RoomMovieOut, RoomOut, RoomCreate, RoomJoin
 from nanoid import generate
 logging.basicConfig(level=logging.INFO)
 router = APIRouter()
@@ -26,17 +26,20 @@ async def get_rooms(db: Session = Depends(get_db)):
 async def create_room(room: dict, db: Session = Depends(get_db)):
     return {"message": "Salle créée", "room": room}
 
-@router.get("/movies", response_model=List[Movie])
-def get_movies():
-    movies = [
-    {"id": 1, "name": "Inception"},
-    {"id": 2, "name": "Interstellar"},
-    {"id": 3, "name": "The Matrix"},
-    {"id": 4, "name": "The Dark Knight"},
-    {"id": 5, "name": "Pulp Fiction"},
-]
+@router.get("/{room_id}/movies", response_model=List[RoomMovieOut])
+async def get_movies(room_id: int, db: Session = Depends(get_db)):
+    """
+    Récupère les films associés à une salle (RoomMovie).
+    """
+    room = db.query(Room).filter(Room.id == room_id).first()
+    if not room:
+        raise HTTPException(status_code=404, detail="Room not found")
+    room_movies = db.query(RoomMovie).filter(RoomMovie.room_id == room_id).all()
 
-    return movies
+    if not room_movies:
+        raise HTTPException(status_code=404, detail="No movies found for this room")
+
+    return room_movies
 
 @router.get("/{user_id}", response_model=List[RoomOut])
 async def get_rooms(user_id: int, db: Session = Depends(get_db)):
@@ -113,3 +116,24 @@ def get_unique_join_code(db: Session, length: int = 6) -> str:
         code = generate_join_code(length)
         if not db.query(Room).filter(Room.join_code == code).first():
             return code
+
+@router.post("/{room_id}/movies", response_model=List[RoomMovieOut])
+async def add_movies_to_room(room_id: int, room_movie: RoomMovieCreate, db: Session = Depends(get_db)):
+    """
+    Ajoute des films à une salle (RoomMovie).
+    """
+    room = db.query(Room).filter(Room.id == room_id).first()
+    if not room:
+        raise HTTPException(status_code=404, detail="Room not found")
+
+    max_movie_index = db.query(RoomMovie).filter(RoomMovie.room_id == room_id).count()
+
+    added_movies = []
+    for idx, movie_id in enumerate(room_movie.movie_ids, start=max_movie_index + 1):
+        db_movie = RoomMovie(room_id=room_id, movie_id=movie_id, movie_index=idx, nb_likes=0)
+        db.add(db_movie)
+        db.commit()
+        db.refresh(db_movie)
+        added_movies.append(db_movie)
+
+    return added_movies
