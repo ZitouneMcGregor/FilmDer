@@ -1,9 +1,69 @@
-La yaura 2 trucs :
+<!-- Sections Join Room et Create Room -->
+<div *ngIf="!creating_room" class="w-full p-5 mx-auto mt-10">
+  <div class="flex w-full">
+    <!-- Section gauche: Join Room -->
+    <div class="w-1/2 p-6 bg-[var(--background)] rounded-lg shadow-lg text-center mr-4">
+      <h2 class="text-3xl font-bold mb-6 text-[var(--text)]">Rejoindre</h2>
+      <form (ngSubmit)="onSubmit()" #connectForm="ngForm">
+        <div class="mb-6">
+          <label for="join_code" class="block text-lg font-medium text-[var(--text)]">
+            Code de Connexion
+          </label>
+          <input
+            type="text"
+            id="join_code"
+            name="join_code"
+            [(ngModel)]="join_code"
+            required
+            minlength="6"
+            maxlength="6"
+            class="mt-2 block mx-auto px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-[var(--primary)] focus:border-[var(--primary)] w-40 text-center"
+            placeholder="6 caractères" />
+        </div>
+        <button
+          type="submit"
+          class="w-full py-3 bg-[var(--primary)] text-white font-bold rounded-md hover:bg-[var(--secondary)] focus:outline-none transition-colors duration-300">
+          Se Connecter
+        </button>
+      </form>
+    </div>
 
-- la liste des parties ou on est invités et on  peut rejoindre
+    <!-- Section droite: Create Room -->
+    <div class="w-1/2 p-6 bg-[var(--background)] rounded-lg shadow-lg text-center">
+      <h2 class="text-3xl font-bold mb-6 text-[var(--text)]">Créer une partie</h2>
+      <button
+        (click)="toggleCreateRoom()"
+        class="w-full py-3 bg-[var(--primary)] text-white font-bold rounded-md hover:bg-[var(--secondary)] focus:outline-none transition-colors duration-300">
+        Créer une partie
+      </button>
+    </div>
+  </div>
+</div>
 
-- un bouton créer une partie
+<app-play-create-room *ngIf="creating_room" (roomCreated)="onRoomCreated($event)"></app-play-create-room>
 
-<div class="w-full flex justify-center">
-    <app-romm-play></app-romm-play>
+<div *ngIf="showModal" class="fixed inset-0 flex items-center justify-center bg-gray-500 bg-opacity-50 z-50">
+  <div class="bg-white p-6 rounded-lg shadow-lg w-96 text-center">
+    <h3 class="text-xl font-semibold mb-4">Partie créée avec succès !</h3>
+    <p class="mb-4">Voici votre code de connexion :</p>
+    <div class="bg-gray-100 p-4 mb-4">
+      <input
+        type="text"
+        [value]="roomCode"
+        readonly
+        class="w-full px-3 py-2 border rounded-md text-center"
+      />
+    </div>
+    <button (click)="copyToClipboard()" class="py-2 px-4 bg-[var(--primary)] text-white rounded-md mr-9">
+      Copier le code
+    </button>
+    <button (click)="closeModal()" class="mt-4 py-2 px-4 bg-gray-500 text-white rounded-md ">
+      Fermer
+    </button>
+  </div>
+</div>
+
+
+<div class="p-5">
+  <app-play-romm-list></app-play-romm-list>
 </div>

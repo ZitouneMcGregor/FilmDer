@@ -1,1 +1,87 @@
-<p>play-create-room works!</p>
+<div class="w-full max-w-6xl mx-auto mt-5 px-8 py-6 bg-[var(--background)] rounded-lg shadow-md">
+  <h2 class="text-2xl font-bold text-center mb-6 text-[var(--text)]">Créer une Partie</h2>
+
+  <form (ngSubmit)="onSubmit()" #roomForm="ngForm">
+    
+    <div class="mb-4">
+      <label for="name" class="block text-sm font-medium text-[var(--text)]">Nom de la Partie</label>
+      <input
+        type="text"
+        id="name"
+        name="name"
+        [(ngModel)]="name"
+        required
+        #nameInput="ngModel"
+        class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none"
+        [ngClass]="{
+          'border-gray-300 focus:ring-[var(--primary)] focus:border-[var(--primary)]': nameInput.valid || (!submitted && nameInput.pristine),
+          'border-red-500 focus:ring-red-500 focus:border-red-500': (nameInput.invalid && nameInput.dirty) || (submitted && nameInput.invalid)
+         }"
+        placeholder="Nom de la room"
+      />
+      <p *ngIf="(nameInput.invalid && nameInput.dirty) || (submitted && nameInput.invalid)" class="text-red-500 text-xs mt-1">
+        Le nom de la partie est requis.
+      </p>
+    </div>
+
+    <!-- Nombre de Joueurs -->
+    <div class="mb-4">
+      <label for="nb_player" class="block text-sm font-medium text-[var(--text)]">Nombre de Joueurs</label>
+      <input
+        type="number"
+        id="nb_player"
+        name="nb_player"
+        [(ngModel)]="nb_player"
+        required
+        min="1"
+        #nbPlayerInput="ngModel"
+        class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none"
+        [ngClass]="{
+          'border-gray-300 focus:ring-[var(--primary)] focus:border-[var(--primary)]': nbPlayerInput.valid || (!submitted && nbPlayerInput.pristine),
+          'border-red-500 focus:ring-red-500 focus:border-red-500': (nbPlayerInput.invalid && nbPlayerInput.dirty) || (submitted && nbPlayerInput.invalid)
+        }"
+        placeholder="Nombre de joueurs"
+      />
+      <p *ngIf="(nbPlayerInput.invalid && nbPlayerInput.dirty) || (submitted && nbPlayerInput.invalid)" class="text-red-500 text-xs mt-1">
+        Le nombre de joueurs est requis et doit être supérieur à 0.
+      </p>
+    </div>
+
+    <!-- Nombre de Films -->
+    <div class="mb-4">
+      <label for="nb_film" class="block text-sm font-medium text-[var(--text)]">Nombre de Films</label>
+      <input
+        type="number"
+        id="nb_film"
+        name="nb_film"
+        [(ngModel)]="nb_film"
+        required
+        min="1"
+        #nbFilmInput="ngModel"
+        class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none"
+        [ngClass]="{
+          'border-gray-300 focus:ring-[var(--primary)] focus:border-[var(--primary)]': nbFilmInput.valid || (!submitted && nbFilmInput.pristine),
+          'border-red-500 focus:ring-red-500 focus:border-red-500': (nbFilmInput.invalid && nbFilmInput.dirty) || (submitted && nbFilmInput.invalid)
+        }"
+        placeholder="Nombre de films"
+      />
+      <p *ngIf="(nbFilmInput.invalid && nbFilmInput.dirty) || (submitted && nbFilmInput.invalid)" class="text-red-500 text-xs mt-1">
+        Le nombre de films est requis et doit être supérieur à 0.
+      </p>
+    </div>
+
+    <!-- Bouton de soumission -->
+    <button
+      type="submit"
+      class="w-full py-2 px-4 bg-[var(--primary)] text-white font-semibold rounded-md hover:bg-[var(--secondary)] focus:outline-none"
+    >
+      Créer la partie
+    </button>
+
+    <!-- Message d'erreur global si le formulaire est invalide -->
+    <p *ngIf="submitted && !roomForm.valid" class="text-red-500 text-sm mt-2 text-center">
+      Veuillez remplir correctement tous les champs avant de créer la partie.
+    </p>
+
+  </form>
+</div>

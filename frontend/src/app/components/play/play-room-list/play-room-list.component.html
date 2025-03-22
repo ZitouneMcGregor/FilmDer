@@ -1,1 +1,53 @@
-<p>play-romm-list works!</p>
+<div *ngIf="loading" class="text-center py-6">
+  <p>Chargement des parties...</p>
+</div>
+
+<div *ngIf="error" class="text-center py-6 text-red-500">
+  <p>{{ error }}</p>
+</div>
+
+<div *ngIf="!loading && !error">
+  <h2 class="text-3xl font-bold text-center mb-6 text-[var(--text)]">Vos parties</h2>
+
+  <table class="min-w-full table-auto">
+    <thead>
+      <tr class="bg-gray-200">
+        <th class="py-2 px-4 text-left">Nom de la partie</th>
+        <th class="py-2 px-4 text-left">Statut</th>
+        <th class="py-2 px-4 text-left">Joueurs</th>
+        <th class="py-2 px-4 text-left">Code de Connexion</th>  <!-- Nouvelle colonne -->
+        <th class="py-2 px-4 text-left">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let room of rooms" [ngClass]="{'bg-gray-50': rooms.indexOf(room) % 2 === 0}">
+        <td class="py-2 px-4 border-b">{{ room.name }} 
+          <span *ngIf="room.id_admin === userId" class="text-yellow-500">
+            👑 
+          </span>
+        </td>
+        <td class="py-2 px-4 border-b">
+          <span [ngClass]="{
+            'text-green-500': room.ready === 1 && room.id_admin !== userId,
+            'text-red-500': room.ready === 0 && room.id_admin !== userId,
+            'text-yellow-500': room.id_admin === userId && room.ready === 0
+          }">
+            {{ room.id_admin === userId && room.ready === 0 ? 'Attente de lancement' : (room.ready === 1 ? 'Prêt' : 'Pas prêt') }}
+          </span>
+        </td>
+        <td class="py-2 px-4 border-b">{{ room.currentPlayers }} / {{ room.nb_player }}</td>
+        <td class="py-2 px-4 border-b">{{ room.join_code || 'Non disponible' }}</td> <!-- Code de connexion -->
+        <td class="py-2 px-4 border-b">
+          <button 
+            [disabled]="room.ready === 0 && room.id_admin !== userId"
+            class="py-2 px-4 mt-4 font-semibold rounded-md 
+            bg-[var(--primary)] text-white 
+            hover:bg-[var(--secondary)] focus:outline-none 
+            disabled:bg-gray-400 disabled:cursor-not-allowed">
+            Jouer
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

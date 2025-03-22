@@ -9,12 +9,8 @@ class RoomBase(BaseModel):
 
 
 class RoomCreate(RoomBase):
+    id_admin: int
     pass
-
-class RoomJoin(BaseModel):
-    join_code: str
-    class Config:
-        from_attributes = True
 
 
 class RoomOut(RoomBase):
@@ -48,3 +44,4 @@ class MovieSchema(BaseModel):
 
     class Config:
         orm_mode = True
+
