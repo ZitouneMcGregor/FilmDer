@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from database import get_db
 from models.room import Room, RoomMovie
 from models.userRoom import UserRoom
-from schemas.room import RoomMovieOut, RoomOut, RoomCreate
+from schemas.room import RoomMovieCreate, RoomMovieOut, RoomOut, RoomCreate
 from schemas.userRoom import UserRoomCreate, UserRoomOut, UserRoomNumber
 from schemas.users import UserId
 from utils.room import get_unique_join_code
@@ -149,3 +149,23 @@ async def get_room_players(room_id: int, db: Session = Depends(get_db)):
     nb_players = db.query(UserRoom).filter(UserRoom.room_id == room_id).count()
     return UserRoomNumber(room_id = room_id, nb_players= nb_players)
 
+@router.post("/{room_id}/movies", response_model=List[RoomMovieOut])
+async def add_movies_to_room(room_id: int, room_movie: RoomMovieCreate, db: Session = Depends(get_db)):
+    """
+    Ajoute des films à une salle (RoomMovie).
+    """
+    room = db.query(Room).filter(Room.id == room_id).first()
+    if not room:
+        raise HTTPException(status_code=404, detail="Room not found")
+
+    max_movie_index = db.query(RoomMovie).filter(RoomMovie.room_id == room_id).count()
+
+    added_movies = []
+    for idx, movie_id in enumerate(room_movie.movie_ids, start=max_movie_index + 1):
+        db_movie = RoomMovie(room_id=room_id, movie_id=movie_id, movie_index=idx, nb_likes=0)
+        db.add(db_movie)
+        db.commit()
+        db.refresh(db_movie)
+        added_movies.append(db_movie)
+
+    return added_movies
