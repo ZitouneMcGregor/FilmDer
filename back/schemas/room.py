@@ -43,5 +43,5 @@ class MovieSchema(BaseModel):
     release_year: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 

@@ -22,6 +22,8 @@ export class PlayCreateRoomComponent {
   submitted = false;
 
   @Output() roomCreated = new EventEmitter<string>();  // L'événement pour émettre le roomCode
+  @Output() cancelCreate = new EventEmitter<any>();  // L'événement pour émettre le roomCode
+
 
   constructor(private roomService: RoomServiceService, private roomStore: RoomStoreService) {}
 
@@ -56,6 +58,12 @@ export class PlayCreateRoomComponent {
       }
     });
 
+ 
     
   }
+
+  onCancel(): void {
+    this.cancelCreate.emit();
+  }
+
 }

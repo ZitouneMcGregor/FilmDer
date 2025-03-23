@@ -63,6 +63,10 @@ export class RoomServiceService {
     return this.http.put<UserId>(`${this.apiUrl}/${room_id}/start`, user_id);
   }
 
+  deleteRoom(room_id: number, user_id: number): Observable<any> {
+    return this.http.delete<any>(`${this.apiUrl}/${room_id}/users/${user_id}`, {});
+  }
+
 
 }
 

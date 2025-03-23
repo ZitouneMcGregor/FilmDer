@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PlayRommListComponent } from './play-romm-list.component';
+import { PlayRommListComponent } from './play-room-list.component';
 
 describe('PlayRommListComponent', () => {
   let component: PlayRommListComponent;
