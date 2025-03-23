@@ -18,3 +18,6 @@ class UsersOut(UsersBase):
 
     class Config:
         from_attributes = True
+
+class UserId(BaseModel):
+    id: int

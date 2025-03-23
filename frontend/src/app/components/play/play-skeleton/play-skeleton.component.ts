@@ -30,7 +30,7 @@ export class PlaySkeletonComponent {
     
     this.roomService.getRoomByJoinCode(this.join_code).subscribe({
       next: (room) => {
-       this.roomService.joinRoom({user_id: 1, room_id: room.id}).subscribe({
+       this.roomService.joinRoom({user_id: Number(localStorage.getItem('UserId')), room_id: room.id}).subscribe({
           next: (data) => {
             this.roomStore.addRoom(room);
           }

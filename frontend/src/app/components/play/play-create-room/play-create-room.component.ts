@@ -3,6 +3,7 @@ import { RoomServiceService } from '../../../services/room/room-service.service'
 import { Room } from '../../../services/room/room-service.service';  // Assurez-vous que cette importation est correcte
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { RoomStoreService } from '../../../services/room/room-store.service';
 
 @Component({
   selector: 'app-play-create-room',
@@ -22,7 +23,7 @@ export class PlayCreateRoomComponent {
 
   @Output() roomCreated = new EventEmitter<string>();  // L'événement pour émettre le roomCode
 
-  constructor(private roomService: RoomServiceService) {}
+  constructor(private roomService: RoomServiceService, private roomStore: RoomStoreService) {}
 
   onSubmit(): void {
     this.submitted = true; 
@@ -33,7 +34,7 @@ export class PlayCreateRoomComponent {
     }
 
     const room: Room = {
-      id_admin: 1,
+      id_admin: Number(localStorage.getItem('UserId')),
       name: this.name,
       nb_player: this.nb_player,
       nb_film: this.nb_film
@@ -44,10 +45,10 @@ export class PlayCreateRoomComponent {
         console.log('Salle créée avec succès:', response);
         this.submitted = false; 
         this.roomCreated.emit(response.join_code);
-        this.roomService.joinRoom({user_id: 1, room_id: response.id}).subscribe({
+        this.roomStore.addRoom(response);
+        this.roomService.joinRoom({user_id: Number(localStorage.getItem('UserId')), room_id: response.id}).subscribe({
           next: (response) => {
-            console.log('Utilisateur ajouté à la salle:', response);
-          }
+            }
         });
       },
       error: (error) => {
