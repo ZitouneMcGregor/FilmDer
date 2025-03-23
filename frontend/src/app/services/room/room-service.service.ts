@@ -24,6 +24,10 @@ export interface UserRoomNumber{
   nb_players: number;
 }
 
+export interface UserId{
+  id: number;
+}
+
 
 
 @Injectable({
@@ -53,6 +57,10 @@ export class RoomServiceService {
 
   getRoomByJoinCode(join_code: string): Observable<Room> {
     return this.http.get<Room>(`${this.apiUrl}/join/${join_code}`);
+  }
+
+  startGame(room_id: number, user_id: UserId): Observable<any> {
+    return this.http.put<UserId>(`${this.apiUrl}/${room_id}/start`, user_id);
   }
 
 

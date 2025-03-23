@@ -12,6 +12,7 @@ from schemas.room import MovieSchema, RoomMovieCreate, RoomMovieOut, RoomOut, Ro
 from nanoid import generate
 
 from schemas.userRoom import UserRoomCreate, UserRoomOut, UserRoomNumber
+from schemas.users import UserId
 
 from utils.room import get_unique_join_code
 
@@ -119,8 +120,8 @@ async def leave_room(room_id: int, user_id: int, db: Session = Depends(get_db)):
     return {"Deleted": True}
 
 
-@router.put("{room_id}/start", response_model=RoomOut)
-async def start_room(room_id: int, user_id: int, db: Session = Depends(get_db)):
+@router.put("/{room_id}/start", response_model=RoomOut)
+async def start_room(room_id: int, user_id: UserId, db: Session = Depends(get_db)):
     """
     Démarre une room si l'utilisateur est admin.
     """
@@ -129,7 +130,7 @@ async def start_room(room_id: int, user_id: int, db: Session = Depends(get_db)):
     if room is None:
         raise HTTPException(status_code=404, detail="Room not found")
 
-    if room.id_admin != user_id:
+    if room.id_admin != user_id.id:
         raise HTTPException(status_code=403, detail="Seul l'admin peut démarrer la room.")
 
     room.ready = 1

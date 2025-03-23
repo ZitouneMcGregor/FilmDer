@@ -15,9 +15,9 @@ export class RoomStoreService {
     this.roomsSubject.next([...currentRooms, room]);
   }
 
-  joinRoom(room: any): void {
+  updateRoom(room: any): void {
     const currentRooms = this.roomsSubject.value;
-    const updatedRooms = currentRooms.map(r => r.id === room.id ? room : r); // Met à jour la room
+    const updatedRooms = currentRooms.map(r => r.id === room.id ? room : r); 
     this.roomsSubject.next(updatedRooms);
   }
 
