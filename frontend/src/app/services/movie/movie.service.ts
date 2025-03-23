@@ -2,6 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Component, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpClientModule } from '@angular/common/http'; // <-- Ajoute ceci !
+
+
 export interface Movie {
   id: number;
   name: string;
@@ -10,12 +12,12 @@ export interface Movie {
 @Injectable({
   providedIn: 'root'
 })
-
 export class MovieService {
-  private apiUrl = "http://127.0.0.1:8000/room/movies"
+  private apiUrl = "http://127.0.0.1:8000"; // Base URL
+
   constructor(private http: HttpClient) {}
 
-  getMovies(): Observable<Movie[]> {
-    return this.http.get<Movie[]>(this.apiUrl)
+  getMoviesByRoom(roomId: number): Observable<Movie[]> {
+    return this.http.get<Movie[]>(`${this.apiUrl}/room/${roomId}/movies`);
   }
 }

@@ -1,7 +1,6 @@
-import { Component, inject } from '@angular/core';
-import { NgFor, NgClass, CommonModule} from '@angular/common';
-import { MovieService } from '../../../services/movie/movie.service';
-import { Movie } from '../../../services/movie/movie.service';
+import { Component, inject, Input, OnInit } from '@angular/core';
+import { NgFor, NgClass, CommonModule } from '@angular/common';
+import { MovieService, Movie } from '../../../services/movie/movie.service';
 
 @Component({
   selector: 'app-romm-play',
@@ -11,26 +10,28 @@ import { Movie } from '../../../services/movie/movie.service';
   styleUrl: './romm-play.component.css',
   providers: [MovieService] 
 })
-
-
-export class RommPlayComponent {
-  userId = "123456"; // ID générique temporaire
-
-
-  // List tmp des films en attendant de les recup depuis le back
-  movies =  [
-    {"id": 1, "name": "Inception"},
-    {"id": 2, "name": "Interstellar"},
-    {"id": 3, "name": "The Matrix"},
-    {"id": 4, "name": "The Dark Knight"},
-    {"id": 5, "name": "Pulp Fiction"},
-]
-
-  // List des films likes/dislikes
+export class RommPlayComponent implements OnInit {
+  userId = "123456"; // ID temporaire
   userVotes: { userId: string; movieId: number; vote: 'like' | 'dislike' }[] = [];
-
   isAnimating = false;
   animationType: 'like' | 'dislike' | '' = '';
+  @Input() roomId!: number; // Récupération de la roomId en entrée
+  movies: Movie[] = [];
+  private movieService = inject(MovieService);
+
+
+  ngOnInit() {
+    if (this.roomId) {
+      console.log("Fetching movies for room:", this.roomId); 
+      this.movieService.getMoviesByRoom(this.roomId).subscribe({
+        next: (movies) => {
+          this.movies = movies,
+          console.log("Movies received from API:", movies); 
+          },
+        error: (err) => console.error("Erreur lors de la récupération des films :", err)
+      });
+    }
+  }
 
   removeMovie(type: 'like' | 'dislike') {
     if (this.movies.length > 0 && !this.isAnimating) {
@@ -49,12 +50,11 @@ export class RommPlayComponent {
         if (this.movies.length === 0) {
           this.handleEndOfList();
         }
-      }, 400); 
+      }, 400);
     }
   }
+
   handleEndOfList() {
-    // Renvoyer vers le back la liste des films likés pour choisir ensuite
-    // A Faire
     alert("Plus de films à afficher !");
   }
 }
