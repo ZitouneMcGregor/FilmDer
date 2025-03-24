@@ -15,7 +15,7 @@ export class RommPlayComponent implements OnInit {
   userVotes: { userId: string; movieId: number; vote: 'like' | 'dislike' }[] = [];
   isAnimating = false;
   animationType: 'like' | 'dislike' | '' = '';
-  @Input() roomId!: number; // Récupération de la roomId en entrée
+  @Input() roomId!: number | null;
   movies: Movie[] = [];
   private movieService = inject(MovieService);
 

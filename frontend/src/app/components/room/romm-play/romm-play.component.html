@@ -10,7 +10,7 @@
                  [style.zIndex]="movies.length - i">
               
               <div class="p-4">
-                <h2 class="text-lg font-bold text-gray-800">{{ movie.name }}</h2>
+                <h2 class="text-lg font-bold text-gray-800">{{ movie.movie_id }}</h2>
               </div>
             </div>
         </ng-container>
@@ -19,6 +19,7 @@
     <ng-template #endMessage>
         <div class="w-80 h-96 flex items-center justify-center bg-white rounded-lg shadow-lg">
             <p class="text-lg font-bold text-gray-800">Plus de films disponibles !</p>
+            <p routerLink="/play">Go back to rooms list</p>
         </div>
     </ng-template>
     
