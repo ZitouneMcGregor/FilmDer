@@ -39,4 +39,9 @@ export class MovieService {
 
     return this.http.get<any>(`${this.tmdbBaseUrl}${movieId}`, { headers });
   }
+
+  voteMovies(roomId: number, votes: { movieId: number; vote: number }[]): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/rooms/${roomId}/votes`, votes);
+  }
+  
 }

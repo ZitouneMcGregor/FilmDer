@@ -1,3 +1,3 @@
 <h1>Room id{{ this.roomId}}</h1>
 
-<app-romm-play [roomId]="roomId"></app-romm-play>
+<app-romm-play *ngIf="roomId !== undefined" [roomId]="roomId!"></app-romm-play>

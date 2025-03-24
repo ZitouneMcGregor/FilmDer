@@ -12,10 +12,10 @@ import { MovieService, Movie } from '../../../services/movie/movie.service';
 })
 export class RommPlayComponent implements OnInit {
   userId = "123456"; // ID temporaire
-  userVotes: { userId: string; movieId: number; vote: 'like' | 'dislike' }[] = [];
+  userVotes: { userId: string; movieId: number; vote: 1 | 0 }[] = [];
   isAnimating = false;
   animationType: 'like' | 'dislike' | '' = '';
-  @Input() roomId!: number | null;
+  @Input() roomId!: number ;
   movies: Movie[] = [];
   private movieService = inject(MovieService);
 
@@ -41,7 +41,7 @@ export class RommPlayComponent implements OnInit {
       setTimeout(() => {
         const movie = this.movies.shift();
         if (movie) {
-          this.userVotes.push({ userId: this.userId, movieId: movie.id, vote: type });
+          this.userVotes.push({ userId: this.userId, movieId: movie.movie_id, vote: type === 'like'? 1 : 0 });
         }
 
         this.isAnimating = false;
@@ -56,5 +56,22 @@ export class RommPlayComponent implements OnInit {
 
   handleEndOfList() {
     alert("Plus de films à afficher !");
+    this.sendVotes()
+  }
+
+  sendVotes() {
+    if (this.userVotes.length > 0) {
+      
+     
+  
+      this.movieService.voteMovies(this.roomId, this.userVotes).subscribe({
+        next: (response) => {
+          console.log('Votes envoyés avec succès', response);
+        },
+        error: (error) => {
+          console.error("Erreur lors de l'envoi des votes :", error);
+        },
+      });
+    }
   }
 }
