@@ -1,6 +1,6 @@
 <div class="min-h-screen bg-[var(--background)] p-6">
     <div *ngIf="loading" class="flex items-center justify-center h-full">
-      <p class="text-2xl text-[var(--text)]">Chargement en cours...</p>
+      <p class="text-2xl text-[var(--text)]">En attente des autres joueurs...</p>
     </div>
   
     <div *ngIf="!loading">
@@ -10,26 +10,26 @@
         <!-- 1er place -->
         <div *ngIf="podiumMovies[0]" class="w-full max-w-lg bg-white rounded-lg shadow-lg p-6 flex flex-col items-center">
           <span class="text-3xl font-bold text-yellow-500">1ère place</span>
-          <img [src]="podiumMovies[0].image" [alt]="podiumMovies[0].name" class="w-48 h-auto object-cover my-4 rounded">
-          <h2 class="text-2xl font-bold text-[var(--text)]">{{ podiumMovies[0].name }}</h2>
-          <p class="mt-2 text-lg text-gray-600">Likes : {{ podiumMovies[0].likes }}</p>
+          <img [src]="podiumMovies[0].movie_img" [alt]="podiumMovies[0].movie_name" class="w-48 h-auto object-cover my-4 rounded">
+          <h2 class="text-2xl font-bold text-[var(--text)]">{{ podiumMovies[0].movie_name }}</h2>
+          <p class="mt-2 text-lg text-gray-600">Likes : {{ 5 }}</p>
         </div>
   
         <div class="flex flex-row space-x-4">
           <!-- 2ème place -->
           <div *ngIf="podiumMovies[1]" class="bg-white rounded-lg shadow-lg p-4 flex flex-col items-center">
             <span class="text-xl font-bold text-gray-600">2ème</span>
-            <img [src]="podiumMovies[1].image" [alt]="podiumMovies[1].name" class="w-40 h-auto object-cover my-2 rounded">
-            <h3 class="text-xl font-bold text-[var(--text)]">{{ podiumMovies[1].name }}</h3>
-            <p class="mt-1 text-sm text-gray-600">Likes : {{ podiumMovies[1].likes }}</p>
+            <img [src]="podiumMovies[1].movie_img" [alt]="podiumMovies[1].movie_name" class="w-40 h-auto object-cover my-2 rounded">
+            <h3 class="text-xl font-bold text-[var(--text)]">{{ podiumMovies[1].movie_name }}</h3>
+            <p class="mt-1 text-sm text-gray-600">Likes : {{ 3 }}</p>
           </div>
   
           <!-- 3ème place -->
           <div *ngIf="podiumMovies[2]" class="bg-white rounded-lg shadow-lg p-4 flex flex-col items-center">
             <span class="text-xl font-bold text-gray-600">3ème</span>
-            <img [src]="podiumMovies[2].image" [alt]="podiumMovies[2].name" class="w-40 h-auto object-cover my-2 rounded">
-            <h3 class="text-xl font-bold text-[var(--text)]">{{ podiumMovies[2].name }}</h3>
-            <p class="mt-1 text-sm text-gray-600">Likes : {{ podiumMovies[2].likes }}</p>
+            <img [src]="podiumMovies[2].movie_img" [alt]="podiumMovies[2].movie_name" class="w-40 h-auto object-cover my-2 rounded">
+            <h3 class="text-xl font-bold text-[var(--text)]">{{ podiumMovies[2].movie_name }}</h3>
+            <p class="mt-1 text-sm text-gray-600">Likes : {{ 1 }}</p>
           </div>
         </div>
       </div>

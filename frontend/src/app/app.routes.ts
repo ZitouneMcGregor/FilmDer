@@ -7,12 +7,14 @@ import { FilmsSkeletonComponent } from './components/films/films-skeleton/films-
 import { AuthGuard } from './guards/authGuard/auth-guard.guard';
 import { LoginGuard } from './guards/loginGuard/login-guard.guard';
 import { RommPlayComponent } from './components/room/romm-play/romm-play.component';
+import { ResultatsComponent } from './components/room/romm-result/romm-result.component';
 
 export const routes: Routes = [
     { path: 'home', component: HomeSkeletonComponent, canActivate: [AuthGuard] },
     { path: 'login', component: LoginSkeletonComponent, canActivate: [LoginGuard]},
     { path: 'play', component: PlaySkeletonComponent, canActivate: [AuthGuard]},
     { path: 'films', component: FilmsSkeletonComponent, canActivate: [AuthGuard]},
+    { path: 'resultats', component: ResultatsComponent},
     { path: '',   redirectTo: '/home', pathMatch: 'full' },
     { path: '**', component: NotFoundComponent }
     
