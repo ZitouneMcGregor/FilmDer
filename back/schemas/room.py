@@ -45,3 +45,7 @@ class MovieSchema(BaseModel):
     class Config:
         from_attributes = True
 
+class RoomMovieVote(BaseModel):
+    userId: int
+    movieId: int
+    vote: int 
