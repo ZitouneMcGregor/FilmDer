@@ -1,8 +1,11 @@
 from typing import List
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
+
+from Algo_Recommandation.algo import algo_recommandation_film
 from database import get_db
-from models.room import Room, RoomMovie
+from models.room import Room
+from models.roomMovie import RoomMovie
 from models.userRoom import UserRoom
 from schemas.room import RoomMovieCreate, RoomMovieOut, RoomMovieVote, RoomOut, RoomCreate
 from schemas.userRoom import UserRoomCreate, UserRoomOut, UserRoomNumber
@@ -113,11 +116,22 @@ async def start_room(room_id: int, user_id: UserId, db: Session = Depends(get_db
     if room.id_admin != user_id.id:
         raise HTTPException(status_code=403, detail="Seul l'admin peut démarrer la room.")
 
+    #try:
+    algo_films = algo_recommandation_film(room_id, db, room.nb_film)
+    for film in algo_films:
+        movie_id = film['id'] if isinstance(film, dict) else film
+        db.add(RoomMovie(room_id=room_id, movie_id=movie_id))
+
     room.ready = 1
     db.commit()
     db.refresh(room)
 
     return room
+
+    #except Exception as e:
+        #db.rollback()
+        #raise HTTPException(status_code=500, detail=f"Erreur lors du démarrage de la room : {str(e)}")
+
 
 
 @router.post("/{room_id}/stop", response_model=RoomOut)
@@ -188,3 +202,4 @@ async def vote_movies(room_id: int, votes: List[RoomMovieVote], db: Session = De
             db.refresh(movie)
 
     return {"message": "Votes enregistrés avec succès"}
+
