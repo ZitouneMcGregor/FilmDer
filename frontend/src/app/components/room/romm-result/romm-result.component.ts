@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-
+import { Movie } from '../../../services/movie/movie.service';
 @Component({
   selector: 'app-romm-result',
   standalone: true,
@@ -7,6 +7,8 @@ import { Component } from '@angular/core';
   templateUrl: './romm-result.component.html',
   styleUrl: './romm-result.component.css'
 })
-export class RommResultComponent {
+export class ResultatsComponent {
+  podiumMovies: Movie[] = [];
+  loading: boolean = true;
 
 }
