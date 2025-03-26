@@ -12,7 +12,22 @@ services:
       - "3336:3306"
     volumes:
       - ./bdd/bdd.sql:/docker-entrypoint-initdb.d/bdd.sql
-      - data:/var/lib/mysql
+      - mysql_data:/var/lib/mysql
+
+
+  mongo:
+    image: mongo:6.0
+    container_name: fastapi_logs
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    environment:
+      MONGO_INITDB_DATABASE: fastapi_logs
+
 
 volumes:
-  data:
+  mysql_data:
+  mongo_data:
+
