@@ -3,10 +3,12 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from dotenv import load_dotenv
 import os
+from pathlib import Path
 
-load_dotenv()
+env_path = Path(__file__).resolve().parent.parent / ".env"
+load_dotenv(dotenv_path=env_path)
 
-SQLALCHEMY_DATABASE_URL = os.getenv("DB_URL")
+SQLALCHEMY_DATABASE_URL = os.getenv("MYSQL_URL")
 
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL,

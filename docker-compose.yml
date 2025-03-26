@@ -6,8 +6,8 @@ services:
     container_name: filmderBdd
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: "1234567aA*"  
-      MYSQL_DATABASE: "FilmDerDataBase"       
+      MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_NAME}      
     ports:
       - "3336:3306"
     volumes:
@@ -17,17 +17,15 @@ services:
 
   mongo:
     image: mongo:6.0
-    container_name: fastapi_logs
+    container_name: filmderMongo
     restart: always
     ports:
-      - "27017:27017"
+      - "${MONGO_PORT}:27017"
     volumes:
       - mongo_data:/data/db
     environment:
-      MONGO_INITDB_DATABASE: fastapi_logs
-
+      MONGO_INITDB_DATABASE: ${MONGO_DB_NAME}
 
 volumes:
   mysql_data:
   mongo_data:
-

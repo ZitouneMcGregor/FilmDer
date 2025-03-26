@@ -3,12 +3,15 @@ from fastapi.middleware.cors import CORSMiddleware
 import time
 from datetime import datetime
 from typing import Dict
-from dotenv import load_dotenv
-import os
 from motor.motor_asyncio import AsyncIOMotorClient
 from routers import users, room
+from dotenv import load_dotenv
+import os
+from pathlib import Path
 
-load_dotenv()
+env_path = Path(__file__).resolve().parent.parent / ".env"
+load_dotenv(dotenv_path=env_path)
+
 
 MONGO_URI = os.getenv("MONGO_URI")
 MONGO_DB_NAME = os.getenv("MONGO_DB_NAME")
