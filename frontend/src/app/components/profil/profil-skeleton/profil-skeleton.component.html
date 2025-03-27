@@ -1,1 +1,7 @@
-Bah le profil
+<div class="min-h-screen bg-[var(--background)] flex items-center justify-center">
+    <div class="w-full max-w-md space-y-8">
+        <app-profil-modal *ngIf="isViewingProfile && user" [user]="user" (edit)="toggleEdit()"  ></app-profil-modal>
+        <app-profil-modif-modal *ngIf="!isViewingProfile && user" [user]="user" (save)="onSave($event)" (cancel)="onCancel()"></app-profil-modif-modal>
+    </div>
+  </div>
+  
