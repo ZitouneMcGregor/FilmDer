@@ -3,7 +3,7 @@ import { Room } from '../room/room-service.service';
 import { environment } from '../../../../environment';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
+import { Observable, of, BehaviorSubject } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 
 
@@ -13,6 +13,8 @@ import { map, catchError } from 'rxjs/operators';
 export class UserServiceService {
   private isAuthenticated = false;
   private apiUrl = `${environment.apiUrl}/users`;
+  private userSubject = new BehaviorSubject<any>(null);
+  public user$ = this.userSubject.asObservable();
 
   constructor(private router: Router, private http: HttpClient) {}
 
@@ -33,6 +35,12 @@ export class UserServiceService {
       );
   }
 
+  getUserId(): number | null {
+    if (!this.isBrowser()) return null;
+    const userId = localStorage.getItem("UserId");
+    return userId ? parseInt(userId, 10) : null;
+  }
+
   logout(): void {
     localStorage.removeItem("UserId");
     this.router.navigate(['/login']);
@@ -51,6 +59,32 @@ export class UserServiceService {
     const userId = localStorage.getItem("UserId");
     return userId !== null && !isNaN(Number(userId));
   }
+  
+  getUser(userId: number): Observable<any> {
+    return this.http.get(`${this.apiUrl}/${userId}`).pipe(
+      map(user => {
+        this.userSubject.next(user); 
+        return user;
+      }),
+      catchError(error => {
+        console.error("Erreur lors de la récupération de l'utilisateur :", error);
+        return of(null);
+      })
+    );
+  }
+  
+  updateUser(userId: number, updatedUser: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/${userId}`, updatedUser).pipe(
+      map(response => {
+        this.userSubject.next(response); 
+      }),
+      catchError(error => {
+        console.error("Erreur lors de la mise à jour de l'utilisateur :", error);
+        return of(null);
+      })
+    );
+  }
+  
   
   
 
