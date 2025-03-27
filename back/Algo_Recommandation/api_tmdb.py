@@ -19,3 +19,9 @@ def get_similar(movie_id: int, page: int = 1):
     response = requests.get(url, headers=HEADERS)
     response.raise_for_status()
     return response.json()
+
+def get_popular(page: int = 1):
+    url = f"{URL}/popular?language=fr-FR&page={page}"
+    response = requests.get(url, headers=HEADERS)
+    response.raise_for_status()
+    return response.json()
