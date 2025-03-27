@@ -1,4 +1,60 @@
-back/__pycache__/
+# =============================
+#  GLOBALEMENT UTILES
+# =============================
+*.log
+*.bak
+*.swp
+*.swo
+*.tmp
+
+# =============================
+#  FICHIERS SENSIBLES
+# =============================
+.env
+.env.*
+
+# =============================
+#  IGNORER LES FICHIERS PYTHON
+# =============================
+__pycache__/
+*.py[cod]
 *.pyc
-*.pyo
+.Python
+venv/
 env/
+.venv/
+*.egg-info/
+*.egg
+build/
+dist/
+
+# =============================
+#  IGNORER LES FICHIERS NODE/ANGULAR
+# =============================
+node_modules/
+npm-debug.log
+yarn-error.log
+.pnpm-debug.log
+.angular/
+dist/
+
+# =============================
+#  IGNORER LES FICHIERS / DOSSIERS DOCKER
+# =============================
+docker-compose.override.yml
+docker-compose.*.yml
+.docker/
+.dockerignore
+
+# =============================
+#  IGNORER LES FICHIERS LIÉS À L'IDE (Ex: VSCode, PyCharm)
+# =============================
+.vscode/
+.idea/
+*.iml
+
+# =============================
+#  IGNORER LES FICHIERS DIVERS
+# =============================
+.DS_Store
+Thumbs.db
