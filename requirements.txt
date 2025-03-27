@@ -2,3 +2,5 @@ nanoid
 fastapi
 uvicorn
 pymysql
+motor
+python-dotenv
