@@ -11,11 +11,13 @@
                 
                   <div class="p-4 text-center">
                     <h2 class="text-lg font-bold text-gray-800">{{ movieDetails[movie.movie_id]?.title || 'Chargement...' }}</h2>
+                   
                     <img *ngIf="movieDetails[movie.movie_id]?.poster_path" 
-                    [src]="movieDetails[movie.movie_id]?.poster_path" 
-                    alt="Affiche du film" 
-                    class="w-full h-64 object-cover rounded-md shadow-md">
-                                  </div>
+                    [src]="'https://image.tmdb.org/t/p/w500' + movieDetails[movie.movie_id]?.poster_path"
+                        alt="Affiche du film" 
+                        class="w-full h-64 object-cover rounded-md shadow-md">
+                    
+                    </div>  
               </div>
           </ng-container>
       </div>

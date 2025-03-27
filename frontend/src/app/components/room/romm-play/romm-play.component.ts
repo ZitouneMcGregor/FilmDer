@@ -1,6 +1,7 @@
 import { Component, inject, Input, OnInit } from '@angular/core';
 import { NgFor, NgClass, CommonModule } from '@angular/common';
 import { MovieService, Movie } from '../../../services/movie/movie.service';
+import { TmdbServiceService } from '../../../services/tmdb/tmdb-service.service';
 
 @Component({
   selector: 'app-romm-play',
@@ -11,14 +12,15 @@ import { MovieService, Movie } from '../../../services/movie/movie.service';
   providers: [MovieService] 
 })
 export class RommPlayComponent implements OnInit {
-  userId = "123456"; // ID temporaire
-  userVotes: { userId: string; movieId: number; vote: 1 | 0 }[] = [];
+  userId = Number(localStorage.getItem("UserId"))
+  userVotes: { userId: number; movieId: number; vote: 1 | 0 }[] = [];
   isAnimating = false;
   animationType: 'like' | 'dislike' | '' = '';
   @Input() roomId!: number ;
   movies: Movie[] = [];
+  movieDetails: { [key: number]: any } = {};
   private movieService = inject(MovieService);
-
+  private tmdbService = inject(TmdbServiceService);
 
   ngOnInit() {
     if (this.roomId) {
@@ -27,10 +29,26 @@ export class RommPlayComponent implements OnInit {
         next: (movies) => {
           this.movies = movies,
           console.log("Movies received from API:", movies); 
+          this.fetchMovieDetails();
           },
         error: (err) => console.error("Erreur lors de la récupération des films :", err)
       });
     }
+  }
+  fetchMovieDetails() {
+    console.log('ici');
+    this.movies.forEach(movie => {
+      if (movie.movie_id) {
+        console.log('la');
+
+        this.tmdbService.getMovieDetails(movie.movie_id).subscribe({
+          next: (details) => {
+            this.movieDetails[movie.movie_id] = details;
+          },
+          error: (err) => console.error(`Erreur lors de la récupération des détails du film ${movie.movie_id}:`, err)
+        });
+      }
+    });
   }
 
   removeMovie(type: 'like' | 'dislike') {
