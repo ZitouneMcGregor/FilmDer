@@ -9,5 +9,5 @@ import { RouterLink } from '@angular/router';
   styleUrl: './home-skeleton.component.css'
 })
 export class HomeSkeletonComponent {
-
+  
 }
