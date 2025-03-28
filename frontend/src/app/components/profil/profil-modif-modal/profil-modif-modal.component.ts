@@ -51,7 +51,7 @@ export class ProfilModifModalComponent implements OnInit {
       const updatedUser: any = {
         pseudo: this.user.pseudo,
         profile_picture: this.user.profile_picture
-      };
+      };8
       // N'ajouter le mot de passe que s'il a été modifié
       if (this.newPassword) {
         updatedUser.u_password = this.newPassword;

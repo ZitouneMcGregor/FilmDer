@@ -7,3 +7,4 @@ class Users(Base):
     id = Column(Integer, primary_key=True, index=True)
     pseudo = Column(String(50), nullable=False)
     u_password = Column(String(255), nullable=False)
+    profile_picture = Column(String(255), nullable=True)

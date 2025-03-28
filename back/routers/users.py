@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List
+import os
 
 from database import get_db
 from models.room import Room
@@ -10,8 +11,28 @@ from schemas.room import RoomOut
 from schemas.users import UsersCreate, UsersOut, UsersUpdate
 from schemas.userMovie import *
 from models.userMovie import UserMovie
+import logging
 
 router = APIRouter()
+
+# Dossier contenant les photos existantes
+UPLOAD_DIR = os.path.abspath("uploads")
+os.makedirs(UPLOAD_DIR, exist_ok=True)
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
+
+@router.get("/photos", response_model=List[str])
+async def get_available_photos():
+    logger.debug(f"Accès au dossier : {UPLOAD_DIR}")
+    try:
+        files = os.listdir(UPLOAD_DIR)
+        logger.debug(f"Fichiers trouvés : {files}")
+        photos = [f"/uploads/{f}" for f in files if os.path.isfile(os.path.join(UPLOAD_DIR, f))]
+        logger.debug(f"Photos renvoyées : {photos}")
+        return photos
+    except Exception as e:
+        logger.error(f"Erreur dans get_available_photos : {e}")
+        raise
 
 @router.get("/", response_model=List[UsersOut])
 async def get_users(db: Session = Depends(get_db)):
@@ -23,21 +44,18 @@ async def get_users(db: Session = Depends(get_db)):
 
 @router.post("/", response_model=UsersOut)
 async def create_user(users: UsersCreate, db: Session = Depends(get_db)):
-    """
-    Crée un nouvel utilisateur, en vérifiant si le pseudo est déjà utilisé.
-    """
-    # Vérifie si un utilisateur existe déjà avec le même pseudo
     existing_user = db.query(Users).filter(Users.pseudo == users.pseudo).first()
     if existing_user:
         raise HTTPException(status_code=400, detail="Le pseudo est déjà pris.")
     
-    # Crée le nouvel utilisateur
-    db_users = Users(pseudo=users.pseudo, u_password=users.u_password)
+    db_users = Users(pseudo=users.pseudo, u_password=users.u_password, profile_picture=users.profile_picture)
+    if users.profile_picture and not os.path.exists(os.path.join(UPLOAD_DIR, users.profile_picture.lstrip('/uploads/'))):
+        raise HTTPException(status_code=400, detail="La photo spécifiée n'existe pas sur le serveur.")
+    
     db.add(db_users)
     db.commit()
     db.refresh(db_users)
     return db_users
-
 
 @router.put("/{user_id}", response_model=UsersOut)
 async def update_user(user_id: int, users_update: UsersUpdate, db: Session = Depends(get_db)):
@@ -45,23 +63,32 @@ async def update_user(user_id: int, users_update: UsersUpdate, db: Session = Dep
     if not db_users:
         raise HTTPException(status_code=404, detail="User not found")
     
-    db_users.pseudo = users_update.pseudo
-    db_users.u_password = users_update.u_password
+    if users_update.pseudo is not None:
+        db_users.pseudo = users_update.pseudo
+    if users_update.u_password is not None:
+        db_users.u_password = users_update.u_password
+    if users_update.profile_picture is not None:
+        filename = users_update.profile_picture.split('/')[-1]  # Extract 'photo2.jpg'
+        check_path = os.path.join(UPLOAD_DIR, filename)
+        logger.debug(f"Raw profile_picture: '{users_update.profile_picture}'")
+        logger.debug(f"Checking file existence at: {check_path}")
+        logger.debug(f"Absolute path: {os.path.abspath(check_path)}")
+        logger.debug(f"File exists: {os.path.exists(check_path)}")
+        if not os.path.exists(check_path):
+            raise HTTPException(status_code=400, detail="La photo spécifiée n'existe pas sur le serveur.")
+        db_users.profile_picture = users_update.profile_picture
     
     db.commit()
     db.refresh(db_users)
     return db_users
 
-
 @router.get("/{user_id}", response_model=UsersOut)
 async def get_user(user_id: int, db: Session = Depends(get_db)):
-    """
-    Récupère un utilisateur spécifique par son ID.
-    """
     db_user = db.query(Users).filter(Users.id == user_id).first()
     if not db_user:
         raise HTTPException(status_code=404, detail="User not found")
     return db_user
+
 
 @router.get("/check/")
 async def check_user(pseudo: str, u_password: str, db: Session = Depends(get_db)):
