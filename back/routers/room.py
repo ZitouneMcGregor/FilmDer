@@ -1,10 +1,13 @@
 from typing import List
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
+
+from Algo_Recommandation.algo import algo_recommandation_film
 from database import get_db
-from models.room import Room, RoomMovie
+from models.room import Room
+from models.roomMovie import RoomMovie
 from models.userRoom import UserRoom
-from schemas.room import RoomMovieCreate, RoomMovieOut, RoomOut, RoomCreate
+from schemas.room import RoomMovieCreate, RoomMovieOut, RoomMovieVote, RoomOut, RoomCreate
 from schemas.userRoom import UserRoomCreate, UserRoomOut, UserRoomNumber
 from schemas.users import UserId
 from utils.room import get_unique_join_code
@@ -113,11 +116,22 @@ async def start_room(room_id: int, user_id: UserId, db: Session = Depends(get_db
     if room.id_admin != user_id.id:
         raise HTTPException(status_code=403, detail="Seul l'admin peut démarrer la room.")
 
+    #try:
+    algo_films = algo_recommandation_film(room_id, db, room.nb_film)
+    for film in algo_films:
+        movie_id = film['id'] if isinstance(film, dict) else film
+        db.add(RoomMovie(room_id=room_id, movie_id=movie_id))
+
     room.ready = 1
     db.commit()
     db.refresh(room)
 
     return room
+
+    #except Exception as e:
+        #db.rollback()
+        #raise HTTPException(status_code=500, detail=f"Erreur lors du démarrage de la room : {str(e)}")
+
 
 
 @router.post("/{room_id}/stop", response_model=RoomOut)
@@ -169,3 +183,23 @@ async def add_movies_to_room(room_id: int, room_movie: RoomMovieCreate, db: Sess
         added_movies.append(db_movie)
 
     return added_movies
+
+@router.post("/{room_id}/votes")
+async def vote_movies(room_id: int, votes: List[RoomMovieVote], db: Session = Depends(get_db)):
+    """
+    Met à jour le nombre de likes des films dans une salle en fonction des votes des utilisateurs.
+    """
+    room = db.query(Room).filter(Room.id == room_id).first()
+    if not room:
+        raise HTTPException(status_code=404, detail="Room not found")
+
+    for vote in votes:
+        movie = db.query(RoomMovie).filter(RoomMovie.room_id == room_id, RoomMovie.movie_id == vote.movieId).first()
+        if movie:
+            if vote.vote == 1:
+                movie.nb_likes += 1  
+            db.commit()
+            db.refresh(movie)
+
+    return {"message": "Votes enregistrés avec succès"}
+

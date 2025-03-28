@@ -7,6 +7,7 @@ import { RoomServiceService } from '../../../services/room/room-service.service'
 import { RoomStoreService } from '../../../services/room/room-store.service';
 import { UserId } from '../../../services/room/room-service.service';
 import { forkJoin, map, switchMap } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-play-romm-list',
@@ -27,7 +28,8 @@ export class PlayRommListComponent implements OnInit, OnChanges, OnDestroy {
     private userService: UserServiceService,
     private roomService: RoomServiceService,
     private roomStore: RoomStoreService,
-    private ngZone: NgZone
+    private ngZone: NgZone,
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -125,4 +127,8 @@ export class PlayRommListComponent implements OnInit, OnChanges, OnDestroy {
       }
     });
   }
+
+  onJoinRoom(roomId: number) {
+  this.router.navigate(['/room', roomId]);
+}
 }
