@@ -1,40 +1,49 @@
-  <div class="bg-green-100 flex flex-col items-center justify-center h-screen">
-      <div class="relative w-80 h-96 flex items-center justify-center">
-          <ng-container *ngIf="movies.length > 0; else endMessage">
-              <div *ngFor="let movie of movies; let i = index"
-                  class="absolute w-full h-full bg-white rounded-lg shadow-lg transition-all duration-500"
-                  [ngClass]="{
-                    'animate-slide-right': i === 0 && isAnimating && animationType === 'like',
-                    'animate-slide-left': i === 0 && isAnimating && animationType === 'dislike'
-                  }"
-                  [style.zIndex]="movies.length - i">
-                
-                  <div class="p-4 text-center">
-                    <h2 class="text-lg font-bold text-gray-800">{{ movieDetails[movie.movie_id]?.title || 'Chargement...' }}</h2>
-                   
-                    <img *ngIf="movieDetails[movie.movie_id]?.poster_path" 
-                    [src]="'https://image.tmdb.org/t/p/w500' + movieDetails[movie.movie_id]?.poster_path"
-                        alt="Affiche du film" 
-                        class="w-full h-64 object-cover rounded-md shadow-md">
-                    
-                    </div>  
-              </div>
-          </ng-container>
-      </div>
-
-      <ng-template #endMessage>
-          <div class="w-80 h-96 flex items-center justify-center bg-white rounded-lg shadow-lg">
-              <p class="text-lg font-bold text-gray-800">Plus de films disponibles !</p>
-              <p routerLink="/play">Go back to rooms list</p>
+<div class="w-full h-screen flex flex-col items-center justify-center bg-[var(--background)]">
+    <!-- Zone de la pile de cartes -->
+    <div class="relative w-80 h-[600px]">
+      <ng-container *ngFor="let movie of movies; let i = index">
+        <div
+          class="absolute w-full h-full transition-transform duration-400 ease-out"
+          [ngStyle]="{'z-index': movies.length - i}"
+          [ngClass]="{
+            'animate-like': isAnimating && animationType === 'like' && i === 0,
+            'animate-dislike': isAnimating && animationType === 'dislike' && i === 0
+          }"
+        >
+          <!-- Image de l'affiche du film -->
+          <img
+            *ngIf="movieDetails[movie.movie_id]?.poster_path"
+            [src]="'https://image.tmdb.org/t/p/w500' + movieDetails[movie.movie_id].poster_path"
+            [alt]="movieDetails[movie.movie_id]?.title"
+            class="w-full h-full object-cover rounded-lg shadow-lg"
+          />
+          <!-- Informations du film en overlay -->
+          <div class="absolute bottom-0 left-0 right-0 bg-[var(--background)] bg-opacity-75 p-4 rounded-b-lg">
+            <h2 class="text-xl font-bold text-[var(--text)]">
+              {{ movieDetails[movie.movie_id]?.title }}
+            </h2>
+            <p class="text-sm text-[var(--text)]">
+              {{ movieDetails[movie.movie_id]?.overview | slice:0:100 }}...
+            </p>
           </div>
-      </ng-template>
-      
-      <div class="mt-8 flex gap-4">
-          <button (click)="removeMovie('dislike')" class="px-6 py-3 bg-red-500 text-white rounded-full shadow-md hover:bg-red-600" [disabled]="movies.length === 0">
-            Dislike
-          </button>
-          <button (click)="removeMovie('like')" class="px-6 py-3 bg-green-500 text-white rounded-full shadow-md hover:bg-green-600" [disabled]="movies.length === 0">
-              Like
-          </button>
-      </div>
+        </div>
+      </ng-container>
+    </div>
+  
+    <!-- Boutons Like / Dislike -->
+    <div class="mt-8 flex gap-10">
+      <button
+        (click)="removeMovie('dislike')"
+        class="w-16 h-16 rounded-full border-2 border-[var(--primary)] flex items-center justify-center text-[var(--primary)] hover:bg-[var(--primary)] hover:text-white focus:outline-none"
+      >
+        <span class="text-2xl">&#10005;</span>
+      </button>
+      <button
+        (click)="removeMovie('like')"
+        class="w-16 h-16 rounded-full border-2 border-[var(--primary)] flex items-center justify-center text-[var(--primary)] hover:bg-[var(--primary)] hover:text-white focus:outline-none"
+      >
+        <span class="text-2xl">&#10003;</span>
+      </button>
+    </div>
   </div>
+  
