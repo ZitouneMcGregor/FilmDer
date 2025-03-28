@@ -203,3 +203,16 @@ async def vote_movies(room_id: int, votes: List[RoomMovieVote], db: Session = De
 
     return {"message": "Votes enregistrés avec succès"}
 
+@router.get("/{room_id}",  response_model=RoomOut)
+async def get_room(room_id: int, db: Session = Depends(get_db)):
+    """
+    Récupére une room en fonction de son id
+    """
+    room = db.query(Room).filter(Room.id == room_id).first()
+    if not room:
+        raise HTTPException(status_code=404, detail="Room not found")
+
+    return room
+
+
+

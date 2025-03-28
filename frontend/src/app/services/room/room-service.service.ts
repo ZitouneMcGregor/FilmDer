@@ -11,6 +11,7 @@ nb_player: number;
 nb_film: number;
 join_code?: string
 id?: number;
+close?: number;
 
 }
 
@@ -65,6 +66,10 @@ export class RoomServiceService {
 
   deleteRoom(room_id: number, user_id: number): Observable<any> {
     return this.http.delete<any>(`${this.apiUrl}/${room_id}/users/${user_id}`, {});
+  }
+
+  getRoom(room_id: number): Observable<Room> {
+    return this.http.get<Room>(`${this.apiUrl}/${room_id}`);
   }
 
 

@@ -8,6 +8,7 @@ import { AuthGuard } from './guards/authGuard/auth-guard.guard';
 import { LoginGuard } from './guards/loginGuard/login-guard.guard';
 import { RommPlayComponent } from './components/room/romm-play/romm-play.component';
 import { RommSkeletonComponent } from './components/room/romm-skeleton/romm-skeleton.component';
+import { RoomResultComponent } from './components/room/room-result/room-result.component';
 
 export const routes: Routes = [
     { path: 'home', component: HomeSkeletonComponent, canActivate: [AuthGuard] },
@@ -15,6 +16,7 @@ export const routes: Routes = [
     { path: 'play', component: PlaySkeletonComponent, canActivate: [AuthGuard]},
     { path: 'films', component: FilmsSkeletonComponent, canActivate: [AuthGuard]},
     { path: 'room/:id', component: RommSkeletonComponent, canActivate:  [AuthGuard]},
+    {path: 'result/:id', component: RoomResultComponent, canActivate: [AuthGuard]},
     { path: '',   redirectTo: '/home', pathMatch: 'full' },
     { path: '**', component: NotFoundComponent }
     
