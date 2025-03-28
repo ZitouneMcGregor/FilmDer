@@ -3,7 +3,7 @@
   <p><strong>Nom:</strong> {{ user?.pseudo }}</p>
   <p><strong>Photo de profil:</strong></p>
   <div class="mt-2">
-    <img *ngIf="user?.profile_picture" [src]="apiUrl + user.profile_picture" class="w-32 h-32 object-cover rounded-full" alt="Photo de profil">
+    <img *ngIf="user?.profile_picture" [src]="getPhotoUrl(user.profile_picture)" class="w-32 h-32 object-cover rounded-full" alt="Photo de profil">
     <span *ngIf="!user?.profile_picture" class="text-gray-500">Aucune photo de profil</span>
   </div>
   <button (click)="editProfile()" class="mt-4 px-4 py-2 bg-blue-500 text-white rounded">

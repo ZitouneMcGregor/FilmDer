@@ -23,25 +23,28 @@ export class ProfilSkeletonComponent implements OnInit {
     const storedUserId = localStorage.getItem('UserId');
     if (storedUserId) {
       this.userId = parseInt(storedUserId, 10);
-      this.userService.getUser(this.userId).subscribe(); 
+      this.loadUserProfile(); // Charger le profil immédiatement
     }
 
     this.userService.user$.subscribe(user => {
-      this.user = user;
+      if (user) {
+        this.user = { ...user }; // Cloner l'objet pour éviter les références
+        console.log('Utilisateur mis à jour via BehaviorSubject :', this.user);
+      }
     });
   }
 
   loadUserProfile() {
     if (this.userId) {
-      this.profilService.getUser(this.userId).subscribe(
-        (data) => {
+      this.userService.getUser(this.userId).subscribe({
+        next: (data) => {
           console.log("📌 Données utilisateur récupérées :", data);
-          this.user = data;
+          this.user = { ...data }; // Mettre à jour avec les nouvelles données
         },
-        (error) => {
+        error: (error) => {
           console.error("⚠️ Erreur lors du chargement du profil :", error);
         }
-      );
+      });
     }
   }
 

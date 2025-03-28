@@ -27,5 +27,9 @@ export class ProfilModalComponent {
       console.warn("⚠️ Aucune donnée utilisateur reçue !");
     }
   }
+
+  getPhotoUrl(photo: string): string {
+    return photo.startsWith('/uploads/') ? `${this.apiUrl}${photo}` : `${this.apiUrl}/uploads/${photo}`;
+  }
     
 }

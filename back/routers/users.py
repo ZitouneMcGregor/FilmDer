@@ -27,13 +27,14 @@ async def get_available_photos():
     try:
         files = os.listdir(UPLOAD_DIR)
         logger.debug(f"Fichiers trouvés : {files}")
-        photos = [f"/uploads/{f}" for f in files if os.path.isfile(os.path.join(UPLOAD_DIR, f))]
+        # Renvoyer juste le nom du fichier, laissant au client le soin d'ajouter /uploads/ si nécessaire
+        photos = [f for f in files if os.path.isfile(os.path.join(UPLOAD_DIR, f))]
         logger.debug(f"Photos renvoyées : {photos}")
-        return photos
+        return photos  # Ex. ["photo1.jpg", "photo2.jpg", ...]
     except Exception as e:
         logger.error(f"Erreur dans get_available_photos : {e}")
         raise
-
+        
 @router.get("/", response_model=List[UsersOut])
 async def get_users(db: Session = Depends(get_db)):
     """
