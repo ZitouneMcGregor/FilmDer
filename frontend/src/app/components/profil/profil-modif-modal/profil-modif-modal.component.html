@@ -1,1 +1,35 @@
-<p>profil-modif-modal works!</p>
+<div class="bg-white p-6 rounded-lg shadow-lg" *ngIf="user">
+  <h2 class="text-xl font-bold">Modifier le profil</h2>
+  
+  <label class="block mt-2">Pseudo:</label>
+  <input [(ngModel)]="user.pseudo" class="border p-2 w-full rounded" />
+
+  <label class="block mt-2">Mot de passe:</label>
+  <input type="password" [(ngModel)]="newPassword" placeholder="Laissez vide pour ne pas modifier" class="border p-2 w-full rounded" />
+  <small class="text-gray-500">Le mot de passe reste inchangé si ce champ est vide.</small>
+  
+  <label class="block mt-2">Confirmer le mot de passe:</label>
+  <input type="password" [(ngModel)]="confirmPassword" placeholder="Confirmez le nouveau mot de passe" class="border p-2 w-full rounded" />
+  <small *ngIf="newPassword && confirmPassword && newPassword !== confirmPassword" class="text-red-500">
+    Les mots de passe ne correspondent pas.
+  </small>
+  
+  <label class="block mt-2">Photo de profil:</label>
+  <div class="grid grid-cols-2 gap-4 mt-2">
+    <div *ngFor="let photo of availablePhotos" 
+         (click)="selectPhoto(photo)" 
+         class="cursor-pointer border-2 rounded-lg p-1"
+         [class.border-green-500]="user.profile_picture === photo || user.profile_picture === '/uploads/' + photo">
+      <img [src]="getPhotoUrl(photo)" class="w-24 h-24 object-cover rounded" alt="Photo option">
+    </div>
+  </div>
+<div class="mt-4">
+  <img *ngIf="user.profile_picture" [src]="getPhotoUrl(user.profile_picture)" 
+       class="w-32 h-32 object-cover rounded-full" alt="Prévisualisation">
+  <span *ngIf="!user.profile_picture" class="text-gray-500">Aucune photo sélectionnée</span>
+</div>  
+  <div class="flex justify-end mt-4 space-x-2">
+    <button (click)="saveProfile()" class="px-4 py-2 bg-green-500 text-white rounded">Sauvegarder</button>
+    <button (click)="cancelEdit()" class="px-4 py-2 bg-gray-500 text-white rounded">Annuler</button>
+  </div>
+</div>

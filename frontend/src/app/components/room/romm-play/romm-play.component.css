@@ -1,29 +1,21 @@
-@keyframes slideRight {
-    from {
-      transform: translateY(0) rotate(0);
-      opacity: 1;
-    }
-    to {
-      transform: translateX(190px) rotate(40deg);
-      opacity: 0;
-    }
+.animate-like {
+  animation: swipe-right 0.4s forwards;
 }
 
-@keyframes slideLeft {
-    from {
-      transform: translateY(0) rotate(0);
-      opacity: 1;
-    }
-    to {
-      transform: translateX(-190px) rotate(-40deg);
-      opacity: 0;
-    }
+.animate-dislike {
+  animation: swipe-left 0.4s forwards;
 }
 
-.animate-slide-right {
-    animation: slideRight 0.6s ease-in-out forwards;
+@keyframes swipe-right {
+  to {
+    transform: translateX(100vw) rotate(30deg);
+    opacity: 0;
+  }
 }
 
-.animate-slide-left {
-    animation: slideLeft 0.6s ease-in-out forwards;
+@keyframes swipe-left {
+  to {
+    transform: translateX(-100vw) rotate(-30deg);
+    opacity: 0;
+  }
 }

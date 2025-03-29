@@ -1,15 +1,22 @@
 <header class="flex items-center justify-between p-4 bg-[var(--primary)] text-white">
   <h1 class="text-2xl font-bold">FilmDer</h1>
-  <button 
-    (click)="toggleTheme()"
-    class="px-4 py-2 bg-white text-[var(--primary)] rounded focus:outline-none">
-    {{ isDark ? 'Thème Jour' : 'Thème Nuit' }}
-  </button>
-  
-  <!-- Bouton de déconnexion conditionnel -->
-  <button 
-  *ngIf="userService.isLoggedIn()" 
-  (click)="logout()" 
-  class="px-4 py-2 bg-red-500 text-white rounded focus:outline-none">
-  Déconnexion
-</button></header>
+
+  <div class="flex items-center space-x-4">
+    <!-- Bouton Thème -->
+    <button 
+      (click)="toggleTheme()"
+      class="px-4 py-2 bg-white text-[var(--primary)] rounded focus:outline-none">
+      {{ isDark ? 'Thème Jour' : 'Thème Nuit' }}
+    </button>
+
+    <!-- Image de profil et Déconnexion (si connecté) -->
+    <div *ngIf="userService.isLoggedIn()" class="flex items-center space-x-2">
+      <img *ngIf="profilePicture" [src]="profilePicture" class="w-10 h-10 object-cover rounded-full" alt="Photo de profil">
+      <button 
+        (click)="logout()" 
+        class="px-4 py-2 bg-red-500 text-white rounded focus:outline-none">
+        Déconnexion
+      </button>
+    </div>
+  </div>
+</header>
