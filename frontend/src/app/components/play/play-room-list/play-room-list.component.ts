@@ -61,7 +61,7 @@ export class PlayRommListComponent implements OnInit, OnChanges, OnDestroy {
       this.ngZone.run(() => {
         this.fetchRooms();
       });
-    }, 5000);
+    }, intervalMs);
   });
   }
   
@@ -118,8 +118,8 @@ export class PlayRommListComponent implements OnInit, OnChanges, OnDestroy {
     this.roomService.deleteRoom(room.id, this.userId).subscribe({
       next: (response) => {
         console.log('Vous avez quitté la room :', response);
-        this.rooms = this.rooms.filter(r => r.id !== room.id);
-
+  
+        this.roomStore.removeRoom(room.id);
       },
       error: (err) => {
         console.error('Erreur lors de la sortie de la room:', err);
@@ -127,6 +127,7 @@ export class PlayRommListComponent implements OnInit, OnChanges, OnDestroy {
       }
     });
   }
+  
 
   onJoinRoom(roomId: number) {
   this.router.navigate(['/room', roomId]);

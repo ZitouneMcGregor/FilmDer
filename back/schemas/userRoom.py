@@ -20,3 +20,4 @@ class UserRoomOut(UserRoomBase):
 class UserRoomNumber(BaseModel):
     room_id: int
     nb_players: int
+    nb_players_finished: int
