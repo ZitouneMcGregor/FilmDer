@@ -31,5 +31,7 @@ export class ProfilModalComponent {
   getPhotoUrl(photo: string): string {
     return photo.startsWith('/uploads/') ? `${this.apiUrl}${photo}` : `${this.apiUrl}/uploads/${photo}`;
   }
+
+  
     
 }

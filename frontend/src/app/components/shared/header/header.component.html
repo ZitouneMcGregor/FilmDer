@@ -11,7 +11,13 @@
 
     <!-- Image de profil et Déconnexion (si connecté) -->
     <div *ngIf="userService.isLoggedIn()" class="flex items-center space-x-2">
-      <img *ngIf="profilePicture" [src]="profilePicture" class="w-10 h-10 object-cover rounded-full" alt="Photo de profil">
+      <img 
+      *ngIf="profilePicture" 
+      [src]="profilePicture" 
+      class="w-10 h-10 object-cover rounded-full cursor-pointer" 
+      alt="Photo de profil"
+      (click)="goToProfile()">
+
       <button 
         (click)="logout()" 
         class="px-4 py-2 bg-red-500 text-white rounded focus:outline-none">
