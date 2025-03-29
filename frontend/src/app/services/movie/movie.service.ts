@@ -1,15 +1,15 @@
+// services/movie/movie.service.ts
+
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Component, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { HttpClientModule } from '@angular/common/http'; // <-- Ajoute ceci !
 import { environment } from '../../../../environment';
 
-
 export interface Movie {
-  id: number;
-  name: string;
-  movie_id: number;
-  posterPath?: string;
+  id: number;         // identifiant du RoomMovie en base
+  room_id: number;    // à quelle room ça appartient
+  movie_id: number;   // l'ID TMDB
+  movie_index: number;
   nb_likes: number;
 }
 
@@ -18,30 +18,28 @@ export interface Movie {
 })
 export class MovieService {
   private apiUrl = environment.apiUrl;
-  private tmdbImagePath = "https://image.tmdb.org/t/p/w600_and_h900_bestv2/"; 
 
-  // Clé et jeton pour l'authentification
-  private apiKey = "1c147b2f3115f93d646b7d3b6da73b89";
-  private apiToken = "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxYzE0N2IyZjMxMTVmOTNkNjQ2YjdkM2I2ZGE3M2I4OSIsIm5iZiI6MTc0MjQ2MjI4MS4yODcwMDAyLCJzdWIiOiI2N2RiZGQ0OWZlYzU4YWEzYzVlOWVlYzYiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.NH_SIV66JTLKcXRfZlwF_b7_eobMrvW44OfXdsO_xuU";
-  private tmdbBaseUrl = 'https://api.themoviedb.org/3/movie/'
   constructor(private http: HttpClient) {}
 
   getMoviesByRoom(roomId: number): Observable<Movie[]> {
-    console.log(`${this.apiUrl}/room/${roomId}/movies`);
-    
+    console.log("ouais");
     return this.http.get<Movie[]>(`${this.apiUrl}/rooms/${roomId}/movies`);
   }
 
-  getMovieDetails(movieId: number): Observable<any> {
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${this.apiToken}`,
+  getUserRoom(roomId: number, userId: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/rooms/${roomId}/user/${userId}`);
+  }
+
+  voteMovie(
+    roomId: number,
+    userId: number,
+    movieId: number,
+    vote: number
+  ): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/rooms/${roomId}/vote`, {
+      userId,
+      movieId,
+      vote
     });
-
-    return this.http.get<any>(`${this.tmdbBaseUrl}${movieId}`, { headers });
   }
-
-  voteMovies(roomId: number, votes: { movieId: number; vote: number }[]): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/rooms/${roomId}/votes`, votes);
-  }
-  
 }

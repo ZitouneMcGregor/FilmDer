@@ -1,45 +1,43 @@
 <div class="w-full h-screen flex flex-col items-center justify-center bg-[var(--background)]">
-    <!-- Zone de la pile de cartes -->
-    <div class="relative w-80 h-[600px]">
-      <ng-container *ngFor="let movie of movies; let i = index">
-        <div
-          class="absolute w-full h-full transition-transform duration-400 ease-out"
-          [ngStyle]="{'z-index': movies.length - i}"
-          [ngClass]="{
-            'animate-like': isAnimating && animationType === 'like' && i === 0,
-            'animate-dislike': isAnimating && animationType === 'dislike' && i === 0
-          }"
-        >
-          <!-- Image de l'affiche du film -->
-          <img
-            *ngIf="movieDetails[movie.movie_id]?.poster_path"
-            [src]="'https://image.tmdb.org/t/p/w500' + movieDetails[movie.movie_id].poster_path"
-            [alt]="movieDetails[movie.movie_id]?.title"
-            class="w-full h-full object-cover rounded-lg shadow-lg"
-          />
-          <!-- Informations du film en overlay -->
-          <div class="absolute bottom-0 left-0 right-0 bg-[var(--background)] bg-opacity-75 p-4 rounded-b-lg">
-            <h2 class="text-xl font-bold text-[var(--text)]">
-              {{ movieDetails[movie.movie_id]?.title }}
-            </h2>
-            <p class="text-sm text-[var(--text)]">
-              {{ movieDetails[movie.movie_id]?.overview | slice:0:100 }}...
-            </p>
-          </div>
+
+    <div class="relative w-80 h-[600px]" *ngIf="currentMovie as movie">
+      <div
+        class="absolute w-full h-full transition-transform duration-400 ease-out"
+        [ngClass]="{
+          'animate-like': isAnimating && animationType === 'like',
+          'animate-dislike': isAnimating && animationType === 'dislike'
+        }"
+      >
+        <img
+          *ngIf="movieDetails[movie.movie_id]?.poster_path"
+          [src]="'https://image.tmdb.org/t/p/w500' + movieDetails[movie.movie_id].poster_path"
+          [alt]="movieDetails[movie.movie_id]?.title"
+          class="w-full h-full object-cover rounded-lg shadow-lg"
+        />
+        <div class="absolute bottom-0 left-0 right-0 bg-[var(--background)] bg-opacity-75 p-4 rounded-b-lg">
+          <h2 class="text-xl font-bold text-[var(--text)]">
+            {{ movieDetails[movie.movie_id]?.title }}
+          </h2>
+          <p class="text-sm text-[var(--text)]">
+            {{ movieDetails[movie.movie_id]?.overview | slice:0:100 }}...
+          </p>
         </div>
-      </ng-container>
+      </div>
     </div>
   
-    <!-- Boutons Like / Dislike -->
+    <div *ngIf="!currentMovie" class="text-white mt-4">
+      Aucun film à afficher (ou tous votés).
+    </div>
+  
     <div class="mt-8 flex gap-10">
       <button
-        (click)="removeMovie('dislike')"
+        (click)="onDislike()"
         class="w-16 h-16 rounded-full border-2 border-[var(--primary)] flex items-center justify-center text-[var(--primary)] hover:bg-[var(--primary)] hover:text-white focus:outline-none"
       >
         <span class="text-2xl">&#10005;</span>
       </button>
       <button
-        (click)="removeMovie('like')"
+        (click)="onLike()"
         class="w-16 h-16 rounded-full border-2 border-[var(--primary)] flex items-center justify-center text-[var(--primary)] hover:bg-[var(--primary)] hover:text-white focus:outline-none"
       >
         <span class="text-2xl">&#10003;</span>
