@@ -1,7 +1,8 @@
 import { Component, Input, NgZone } from '@angular/core';
-import { Room, RoomServiceService } from '../../../services/room/room-service.service';
+import { Room, RoomServiceService, UserId } from '../../../services/room/room-service.service';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
+import { MovieService } from '../../../services/movie/movie.service';
 
 @Component({
   selector: 'app-room-result',
@@ -16,11 +17,15 @@ export class RoomResultComponent {
     isAdmin: boolean = false;
     userId: number = Number(localStorage.getItem('UserId'));
     private pollingIntervalId: any;
+    nb_players!: number;
+    nb_players_finished!: number;
  
 
 
 
-    constructor(private roomService: RoomServiceService,  private route: ActivatedRoute, private ngZone: NgZone,) { }
+    constructor(private roomService: RoomServiceService,  private route: ActivatedRoute, private ngZone: NgZone, private movieService: MovieService) { }
+
+    
 
     ngOnInit() {
 
@@ -36,16 +41,27 @@ export class RoomResultComponent {
 
       this.roomService.getRoom(this.roomId).subscribe({
         next: (room) => {
-            const roomData = Array.isArray(room) ? room[0] : room;
-            this.isRoomTerminated = roomData.close === 1;
+            this.isRoomTerminated = room.close === 1;
             if(this.userId == room.id_admin){
               this.isAdmin = true;
+              console.log("Vous êtes admin la salle");
+            }else{
+              this.isAdmin = false;
+              console.log(this.userId, room.id_admin);
             }
         },
         error: (err) => console.error("Erreur lors de la récupération de la salle :", err)
     });
 
-    }
+    this.roomService.getNbPlayers(this.roomId).subscribe({
+      next: (response) => {
+        this.nb_players = response.nb_players;
+        this.nb_players_finished = response.nb_players_finished;
+      },
+      error: (err) => console.error("Erreur lors de la récupération du nombre de joueurs :", err)
+
+
+    })};
 
 
     startPolling(intervalMs: number): void {
@@ -57,6 +73,31 @@ export class RoomResultComponent {
         }, intervalMs);
       });
       }
-  
 
+    
+      endRoom(): void {
+        if (this.isAdmin === false) {
+              console.warn('Vous n’êtes pas admin de cette partie');
+              return;
+            }
+            const userId: UserId = { id: this.userId };
+        this.roomService.stopGame(this.roomId, userId).subscribe({
+          next: (response) => {
+            console.log("Salle terminée", response);
+            this.isRoomTerminated = true;
+            clearInterval(this.pollingIntervalId);
+          },
+          error: (err) => console.error("Erreur lors de la terminaison de la salle :", err)
+        });
+      }
+
+      displayresult(): void {
+
+        if (this.isRoomTerminated === false) {
+          console.warn('La salle n’est pas encore terminée');
+          return;
+        }
+        
+
+      }
 }

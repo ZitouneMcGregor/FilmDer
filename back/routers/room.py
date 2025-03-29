@@ -14,6 +14,20 @@ from utils.room import get_unique_join_code
 
 router = APIRouter()
 
+
+@router.get("/{room_id}",  response_model=RoomOut)
+async def get_room(room_id: int, db: Session = Depends(get_db)):
+    """
+    Récupére une room en fonction de son id
+    """
+    room = db.query(Room).filter(Room.id == room_id).first()
+    if room is None:
+        raise HTTPException(status_code=404, detail="Room not found")
+
+    return room
+
+
+
 @router.get("/{room_id}/movies", response_model=List[RoomMovieOut])
 async def get_movies(room_id: int, db: Session = Depends(get_db)):
     """
@@ -22,6 +36,7 @@ async def get_movies(room_id: int, db: Session = Depends(get_db)):
     room = db.query(Room).filter(Room.id == room_id).first()
     if not room:
         raise HTTPException(status_code=404, detail="Room not found")
+    
     room_movies = db.query(RoomMovie).filter(RoomMovie.room_id == room_id).all()
 
     if not room_movies:
@@ -116,7 +131,6 @@ async def start_room(room_id: int, user_id: UserId, db: Session = Depends(get_db
     if room.id_admin != user_id.id:
         raise HTTPException(status_code=403, detail="Seul l'admin peut démarrer la room.")
 
-    #try:
     algo_films = algo_recommandation_film(room_id, db, room.nb_film)
     for film in algo_films:
         movie_id = film['id'] if isinstance(film, dict) else film
@@ -128,14 +142,11 @@ async def start_room(room_id: int, user_id: UserId, db: Session = Depends(get_db
 
     return room
 
-    #except Exception as e:
-        #db.rollback()
-        #raise HTTPException(status_code=500, detail=f"Erreur lors du démarrage de la room : {str(e)}")
 
 
 
-@router.post("/{room_id}/stop", response_model=RoomOut)
-async def start_room(user_id: int, room_id: int, db: Session = Depends(get_db)):
+@router.put("/{room_id}/stop", response_model=RoomOut)
+async def stop_room(user_id: UserId, room_id: int, db: Session = Depends(get_db)):
     """
     start la room
     """
@@ -143,7 +154,7 @@ async def start_room(user_id: int, room_id: int, db: Session = Depends(get_db)):
     room = db.query(Room).filter(Room.id == room_id).first()
     if room is None:
         raise HTTPException(status_code=404, detail="Room not found")
-    if room.id_admin != user_id:
+    if room.id_admin != user_id.id:
         raise HTTPException(status_code=403, detail="Tu n'es pas admin mon coco :)")
 
     room.close = 1
@@ -161,28 +172,9 @@ async def get_room_players(room_id: int, db: Session = Depends(get_db)):
     if room is None:
         raise HTTPException(status_code=404, detail="Room not found")
     nb_players = db.query(UserRoom).filter(UserRoom.room_id == room_id).count()
-    return UserRoomNumber(room_id = room_id, nb_players= nb_players)
+    nb_players_finish = db.query(UserRoom).filter(UserRoom.room_id == room_id, UserRoom.index_film == room.nb_film).count()
+    return UserRoomNumber(room_id = room_id, nb_players= nb_players, nb_players_finished = nb_players_finish)
 
-@router.post("/{room_id}/movies", response_model=List[RoomMovieOut])
-async def add_movies_to_room(room_id: int, room_movie: RoomMovieCreate, db: Session = Depends(get_db)):
-    """
-    Ajoute des films à une salle (RoomMovie).
-    """
-    room = db.query(Room).filter(Room.id == room_id).first()
-    if not room:
-        raise HTTPException(status_code=404, detail="Room not found")
-
-    max_movie_index = db.query(RoomMovie).filter(RoomMovie.room_id == room_id).count()
-
-    added_movies = []
-    for idx, movie_id in enumerate(room_movie.movie_ids, start=max_movie_index + 1):
-        db_movie = RoomMovie(room_id=room_id, movie_id=movie_id, movie_index=idx, nb_likes=0)
-        db.add(db_movie)
-        db.commit()
-        db.refresh(db_movie)
-        added_movies.append(db_movie)
-
-    return added_movies
 
 @router.post("/{room_id}/votes")
 async def vote_movies(room_id: int, votes: List[RoomMovieVote], db: Session = Depends(get_db)):
@@ -203,16 +195,8 @@ async def vote_movies(room_id: int, votes: List[RoomMovieVote], db: Session = De
 
     return {"message": "Votes enregistrés avec succès"}
 
-@router.get("/{room_id}",  response_model=RoomOut)
-async def get_room(room_id: int, db: Session = Depends(get_db)):
-    """
-    Récupére une room en fonction de son id
-    """
-    room = db.query(Room).filter(Room.id == room_id).first()
-    if not room:
-        raise HTTPException(status_code=404, detail="Room not found")
 
-    return room
+
 
 
 

@@ -25,12 +25,12 @@ def algo_recommandation_film(room_id: int, db: Session, nb_film: int = 10):
     if min_film == 0:
         while len(set(recommended_movies)) < nb_film:
             reco = get_popular(page=page).get('results', [])
-            if len(reco)>= nb_film:
-                for reco in reco:
+            for reco in reco:
+                if len(set(recommended_movies)) < nb_film:
                     recommended_movies.append(reco['id'])
-                return recommended_movies
-            else:
-                page += 1
+                elif len(set(recommended_movies)) == nb_film:
+                    return recommended_movies
+            page += 1
 
     #On récupérer les users de la room
     users_subquery = select(UserRoom.user_id).where(UserRoom.room_id == room_id)
