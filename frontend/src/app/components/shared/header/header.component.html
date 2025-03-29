@@ -1,22 +1,31 @@
-<header class="flex items-center justify-between p-4 bg-[var(--primary)] text-white">
-  <h1 class="text-2xl font-bold">FilmDer</h1>
-
-  <div class="flex items-center space-x-4">
-    <!-- Bouton Thème -->
-    <button 
-      (click)="toggleTheme()"
-      class="px-4 py-2 bg-white text-[var(--primary)] rounded focus:outline-none">
-      {{ isDark ? 'Thème Jour' : 'Thème Nuit' }}
-    </button>
-
-    <!-- Image de profil et Déconnexion (si connecté) -->
-    <div *ngIf="userService.isLoggedIn()" class="flex items-center space-x-2">
-      <img *ngIf="profilePicture" [src]="profilePicture" class="w-10 h-10 object-cover rounded-full" alt="Photo de profil">
-      <button 
-        (click)="logout()" 
-        class="px-4 py-2 bg-red-500 text-white rounded focus:outline-none">
-        Déconnexion
-      </button>
+<header class="bg-[var(--primary)] text-[var(--background)] shadow-md">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-16">
+      <!-- Logo cliquable menant à l'accueil -->
+      <a routerLink="/" class="flex items-center space-x-2 hover:underline">
+        <img src="filmder_white.ico" alt="FilmDer Logo" class="w-8 h-8">
+        <span class="text-2xl font-extrabold tracking-wide">FilmDer</span>
+      </a>
+      <!-- Zone d'actions utilisateur -->
+      <div class="flex items-center space-x-4">
+        <ng-container *ngIf="userService.isLoggedIn()">
+          <img 
+            *ngIf="profilePicture" 
+            [src]="profilePicture" 
+            alt="Photo de profil" 
+            class="w-10 h-10 rounded-full object-cover border border-[var(--background)]">
+          <button 
+            routerLink="/profil" 
+            class="px-4 py-2 border border-[var(--background)] rounded-md text-sm font-medium hover:bg-[var(--background)] hover:text-[var(--primary)] transition duration-200">
+            Profil
+          </button>
+          <button 
+            (click)="logout()" 
+            class="px-4 py-2 bg-[var(--accent)] rounded-md text-sm font-medium hover:bg-[var(--secondary)] transition duration-200">
+            Déconnexion
+          </button>
+        </ng-container>
+      </div>
     </div>
   </div>
 </header>
