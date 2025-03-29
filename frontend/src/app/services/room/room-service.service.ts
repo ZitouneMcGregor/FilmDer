@@ -67,6 +67,10 @@ export class RoomServiceService {
     return this.http.delete<any>(`${this.apiUrl}/${room_id}/users/${user_id}`, {});
   }
 
+  isUserInRoom(roomId: string): boolean {
+    const userRooms = ['1', '2', '3']; // Exemple de salles auxquelles l'utilisateur appartient
+    return userRooms.includes(roomId);
+  }
 
 }
 
