@@ -1,9 +1,33 @@
-<div class="flex h-screen bg-[var(--background)]">
-    <a routerLink="/play" class="flex-1 bg-[var(--primary)] hover:bg-[var(--accent)] text-[var(--text)] flex items-center justify-center text-5xl font-bold focus:outline-none">
-      MATCH !
-    </a>
-    <a routerLink="/films" class="flex-1 bg-[var(--secondary)] hover:bg-[var(--accent)] text-[var(--text)] flex items-center justify-center text-5xl font-bold focus:outline-none">
-      Mes films
-    </a>
+<div class="flex h-screen bg-[var(--background)] relative">
+  <!-- Left Section -->
+  <a routerLink="/play"
+    class="flex-[1] bg-[var(--primary)] hover:bg-[var(--accent)] text-[var(--text)] flex items-center justify-center  
+    focus:outline-none transition-all duration-300 hover:w-[40%]"
+    (mouseenter)="updateText('match')"
+    (mouseleave)="resetText()">
+    <div class="text-center text-white">
+      <h1 class="font-bold text-5xl mb-10 animate-bounce">🎬 Match</h1>
+      <p>Trouvez le Film Parfait Entre Amis</p>
+    </div>
+  </a>
+
+  <!-- Middle Section -->
+  <div class="flex-[1] bg-[var(--accent)] hover:bg-[var(--primary)] text-[var(--text)] flex items-center justify-center  
+    focus:outline-none transition-all duration-300 hover:w-[50%]">
+    <div class="flex-col text-center text-white p-10 transition-all duration-300">
+      <div [innerHTML]="middleText"></div>
+    </div>
   </div>
-  
+
+  <!-- Right Section -->
+  <a routerLink="/films"
+    class="flex-[1] bg-[var(--primary)] hover:bg-[var(--accent)] text-[var(--text)] flex items-center justify-center  
+    focus:outline-none transition-all duration-300 hover:w-[40%]"
+    (mouseenter)="updateText('films')"
+    (mouseleave)="resetText()">
+    <div class="text-center text-white">
+      <h1 class="font-bold text-5xl mb-10 animate-bounce">📽️ FILMS</h1>
+      <p>Gérez Votre Bibliothèque Cinématographique</p>
+    </div>
+  </a>
+</div>
