@@ -58,23 +58,37 @@ export class ProfilModifModalComponent implements OnInit {
       console.error('Aucun utilisateur à sauvegarder');
       return;
     }
-
+  
     if (this.newPassword && this.newPassword !== this.confirmPassword) {
       console.error('Les mots de passe ne correspondent pas.');
       return;
     }
-
+  
     const updatedUser: any = {
       pseudo: this.user.pseudo,
-      profile_picture: this.user.profile_picture // Nom brut du fichier (ex. "photo1.jpg")
+      profile_picture: this.user.profile_picture // Nom brut du fichier
     };
     if (this.newPassword) {
       updatedUser.u_password = this.newPassword;
     }
-
+  
     console.log('Données envoyées :', updatedUser);
-    this.save.emit(updatedUser);
+  
+    this.profilService.updateUser(this.user.id, updatedUser).subscribe({
+      next: (response) => {
+        console.log('✅ Profil mis à jour avec succès', response);
+        
+        // 🔥 Mettre à jour le user dans UserServiceService
+        this.userService.setUser(response); 
+  
+        this.save.emit(response);
+      },
+      error: (error) => {
+        console.error('❌ Erreur lors de la mise à jour du profil', error);
+      }
+    });
   }
+  
 
   cancelEdit() {
     console.log('Annulation de l’édition');

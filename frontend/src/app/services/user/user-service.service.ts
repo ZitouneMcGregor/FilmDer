@@ -41,6 +41,11 @@ export class UserServiceService {
     );
   }
 
+  setUser(user: any): void {
+    this.userSubject.next(user);
+  }
+  
+
   logout(): void {
     localStorage.removeItem("UserId");
     this.userSubject.next(null); // Réinitialise les données utilisateur
