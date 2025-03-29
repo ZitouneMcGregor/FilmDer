@@ -2,6 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { interval, Observable, switchMap } from 'rxjs';
 import { environment } from '../../../../environment';
+import { map } from 'rxjs/operators';
 
 
 export interface Room{
@@ -67,10 +68,14 @@ export class RoomServiceService {
     return this.http.delete<any>(`${this.apiUrl}/${room_id}/users/${user_id}`, {});
   }
 
-  isUserInRoom(roomId: string): boolean {
-    const userRooms = ['1', '2', '3']; // Exemple de salles auxquelles l'utilisateur appartient
-    return userRooms.includes(roomId);
+  isUserInRoom(userId: number, roomId: string): Observable<boolean> {
+    return this.http.get<any[]>(`${this.apiUrl}/${userId}`).pipe(
+      map(rooms => {
+        return rooms.some(room => room.id === parseInt(roomId, 10));
+      })
+    );
   }
+
 
 }
 
