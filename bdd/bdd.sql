@@ -7,7 +7,8 @@ USE FilmDerDataBase;
 CREATE TABLE IF NOT EXISTS Users (
     id INT AUTO_INCREMENT PRIMARY KEY,  
     pseudo VARCHAR(50) NOT NULL,    
-    u_password VARCHAR(255) NOT NULL    
+    u_password VARCHAR(255) NOT NULL,
+    profile_picture VARCHAR(255) NULL
 );
 
 
