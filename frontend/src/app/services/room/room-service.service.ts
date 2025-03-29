@@ -12,6 +12,7 @@ nb_player: number;
 nb_film: number;
 join_code?: string
 id?: number;
+close?: number;
 
 }
 
@@ -23,6 +24,7 @@ export interface UserRoom{
 export interface UserRoomNumber{
   room_id: number;
   nb_players: number;
+  nb_players_finished: number;
 }
 
 export interface UserId{
@@ -64,8 +66,18 @@ export class RoomServiceService {
     return this.http.put<UserId>(`${this.apiUrl}/${room_id}/start`, user_id);
   }
 
+
+  stopGame(room_id: number, user_id: UserId): Observable<any> {
+    return this.http.put<UserId>(`${this.apiUrl}/${room_id}/stop`, user_id);
+  }
+
+
   deleteRoom(room_id: number, user_id: number): Observable<any> {
     return this.http.delete<any>(`${this.apiUrl}/${room_id}/users/${user_id}`, {});
+  }
+
+  getRoom(room_id: number): Observable<Room> {
+    return this.http.get<Room>(`${this.apiUrl}/${room_id}`);
   }
 
 

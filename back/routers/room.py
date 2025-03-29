@@ -7,12 +7,27 @@ from database import get_db
 from models.room import Room
 from models.roomMovie import RoomMovie
 from models.userRoom import UserRoom
-from schemas.room import RoomMovieCreate, RoomMovieOut, RoomMovieVote, RoomOut, RoomCreate
-from schemas.userRoom import UserRoomCreate, UserRoomOut, UserRoomNumber
-from schemas.users import UserId
+from schemas.room import *
+from schemas.userRoom import *
+from schemas.users import *
+from schemas.roomMovie import *
 from utils.room import get_unique_join_code
 
 router = APIRouter()
+
+
+@router.get("/{room_id}",  response_model=RoomOut)
+async def get_room(room_id: int, db: Session = Depends(get_db)):
+    """
+    Récupére une room en fonction de son id
+    """
+    room = db.query(Room).filter(Room.id == room_id).first()
+    if room is None:
+        raise HTTPException(status_code=404, detail="Room not found")
+
+    return room
+
+
 
 @router.get("/{room_id}/movies", response_model=List[RoomMovieOut])
 async def get_movies(room_id: int, db: Session = Depends(get_db)):
@@ -22,6 +37,7 @@ async def get_movies(room_id: int, db: Session = Depends(get_db)):
     room = db.query(Room).filter(Room.id == room_id).first()
     if not room:
         raise HTTPException(status_code=404, detail="Room not found")
+    
     room_movies = db.query(RoomMovie).filter(RoomMovie.room_id == room_id).all()
 
     if not room_movies:
@@ -116,7 +132,6 @@ async def start_room(room_id: int, user_id: UserId, db: Session = Depends(get_db
     if room.id_admin != user_id.id:
         raise HTTPException(status_code=403, detail="Seul l'admin peut démarrer la room.")
 
-    #try:
     algo_films = algo_recommandation_film(room_id, db, room.nb_film)
     for film in algo_films:
         movie_id = film['id'] if isinstance(film, dict) else film
@@ -128,14 +143,11 @@ async def start_room(room_id: int, user_id: UserId, db: Session = Depends(get_db
 
     return room
 
-    #except Exception as e:
-        #db.rollback()
-        #raise HTTPException(status_code=500, detail=f"Erreur lors du démarrage de la room : {str(e)}")
 
 
 
-@router.post("/{room_id}/stop", response_model=RoomOut)
-async def start_room(user_id: int, room_id: int, db: Session = Depends(get_db)):
+@router.put("/{room_id}/stop", response_model=RoomOut)
+async def stop_room(user_id: UserId, room_id: int, db: Session = Depends(get_db)):
     """
     start la room
     """
@@ -143,7 +155,7 @@ async def start_room(user_id: int, room_id: int, db: Session = Depends(get_db)):
     room = db.query(Room).filter(Room.id == room_id).first()
     if room is None:
         raise HTTPException(status_code=404, detail="Room not found")
-    if room.id_admin != user_id:
+    if room.id_admin != user_id.id:
         raise HTTPException(status_code=403, detail="Tu n'es pas admin mon coco :)")
 
     room.close = 1
@@ -161,7 +173,12 @@ async def get_room_players(room_id: int, db: Session = Depends(get_db)):
     if room is None:
         raise HTTPException(status_code=404, detail="Room not found")
     nb_players = db.query(UserRoom).filter(UserRoom.room_id == room_id).count()
-    return UserRoomNumber(room_id = room_id, nb_players= nb_players)
+    nb_players_finish = db.query(UserRoom).filter(UserRoom.room_id == room_id, UserRoom.index_film == room.nb_film).count()
+    return UserRoomNumber(room_id = room_id, nb_players= nb_players, nb_players_finished = nb_players_finish)
+
+
+
+
 
 @router.post("/{room_id}/movies", response_model=List[RoomMovieOut])
 async def add_movies_to_room(room_id: int, room_movie: RoomMovieCreate, db: Session = Depends(get_db)):
@@ -184,22 +201,64 @@ async def add_movies_to_room(room_id: int, room_movie: RoomMovieCreate, db: Sess
 
     return added_movies
 
-@router.post("/{room_id}/votes")
-async def vote_movies(room_id: int, votes: List[RoomMovieVote], db: Session = Depends(get_db)):
+
+
+@router.post("/{room_id}/vote")
+async def vote_movie(room_id: int, vote: RoomMovieVote, db: Session = Depends(get_db)):
     """
-    Met à jour le nombre de likes des films dans une salle en fonction des votes des utilisateurs.
+    L'utilisateur (vote.userId) vote pour le film (vote.movieId):
+      - Si vote=1 => on incrémente nb_likes
+      - On incrémente l'index_film (UserRoom.index_film) de l'utilisateur
     """
+    # Vérifier l'existence de la room
     room = db.query(Room).filter(Room.id == room_id).first()
     if not room:
         raise HTTPException(status_code=404, detail="Room not found")
 
-    for vote in votes:
-        movie = db.query(RoomMovie).filter(RoomMovie.room_id == room_id, RoomMovie.movie_id == vote.movieId).first()
-        if movie:
-            if vote.vote == 1:
-                movie.nb_likes += 1  
-            db.commit()
-            db.refresh(movie)
+    # Vérifier l'utilisateur dans la room
+    user_room = db.query(UserRoom).filter(
+        UserRoom.room_id == room_id,
+        UserRoom.user_id == vote.userId
+    ).first()
+    if not user_room:
+        raise HTTPException(status_code=404, detail="User not in this room")
 
-    return {"message": "Votes enregistrés avec succès"}
+    # Vérifier que le film existe dans la room
+    movie = db.query(RoomMovie).filter(
+        RoomMovie.room_id == room_id,
+        RoomMovie.movie_id == vote.movieId
+    ).first()
+    if not movie:
+        raise HTTPException(status_code=404, detail="Movie not in this room")
+
+    if vote.vote == 1:
+        movie.nb_likes += 1
+
+    user_room.index_film += 1
+
+    db.commit()
+    db.refresh(movie)
+    db.refresh(user_room)
+
+    return {
+        "message": "Vote enregistré",
+        "newIndex": user_room.index_film
+    }
+
+
+@router.get("/{room_id}/user/{user_id}", response_model=UserRoomOut)
+async def get_user_room(room_id: int, user_id: int, db: Session = Depends(get_db)):
+    """
+    Récupère l'enregistrement UserRoom pour un user donné dans une room donnée,
+    afin de connaître par ex. index_film.
+    """
+    user_room = db.query(UserRoom).filter(
+        UserRoom.user_id == user_id,
+        UserRoom.room_id == room_id
+    ).first()
+
+    if not user_room:
+        raise HTTPException(status_code=404, detail="User not in this room")
+
+    return user_room
 

@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { FilmsModalComponent } from './films-modal.component';
+import { RoomResultComponent } from './room-result.component';
 
-describe('FilmsModalComponent', () => {
-  let component: FilmsModalComponent;
-  let fixture: ComponentFixture<FilmsModalComponent>;
+describe('RoomResultComponent', () => {
+  let component: RoomResultComponent;
+  let fixture: ComponentFixture<RoomResultComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [FilmsModalComponent]
+      imports: [RoomResultComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(FilmsModalComponent);
+    fixture = TestBed.createComponent(RoomResultComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

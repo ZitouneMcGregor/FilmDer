@@ -1,8 +1,6 @@
-/* You can add global styles to this file, and also import other style files */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
 @layer base {
     :root {
       --text: #210e0d;
@@ -12,11 +10,22 @@
       --accent: #e0241a;
     }
     .dark {
-      --text: #f3e0df;
-      --background: #160707;
-      --primary: #ff0d00;
-      --secondary: #901e18;
-      --accent: #e5281e;
+      --text: #090404;
+    --background: rgb(252, 230, 230);
+    --primary: #c04d56;
+    --secondary: #de9399;
+    --accent: #d76870;
+      
     }
   }
   
+
+/**
+
+--text: #050707;
+      --background: #f9fbfa;
+      --primary: #6b9e8b;
+      --secondary: #adcdc1;
+      --accent: #82b8a4;
+
+**/

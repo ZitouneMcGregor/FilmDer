@@ -28,4 +28,10 @@ export class RoomStoreService {
   getRooms(): any[] {
     return this.roomsSubject.value;
   }
+
+  removeRoom(roomId: any): void {
+    const currentRooms = this.roomsSubject.value;
+    const updatedRooms = currentRooms.filter(r => r.id !== roomId);
+    this.roomsSubject.next(updatedRooms);
+  }
 }
