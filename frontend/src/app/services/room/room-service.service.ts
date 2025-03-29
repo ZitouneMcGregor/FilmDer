@@ -68,14 +68,6 @@ export class RoomServiceService {
     return this.http.delete<any>(`${this.apiUrl}/${room_id}/users/${user_id}`, {});
   }
 
-  isUserInRoom(userId: number, roomId: string): Observable<boolean> {
-    return this.http.get<any[]>(`${this.apiUrl}/${userId}`).pipe(
-      map(rooms => {
-        return rooms.some(room => room.id === parseInt(roomId, 10));
-      })
-    );
-  }
-
 
 }
 
