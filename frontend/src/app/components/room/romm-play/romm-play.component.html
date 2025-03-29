@@ -1,34 +1,45 @@
-<div class="w-full h-screen flex flex-col items-center justify-center bg-[var(--background)]">
+<div class="w-full h-screen overflow-hidden bg-[var(--background)]">
+  <div class="mt-12 flex flex-col items-center justify-start h-full">
+    
+    <ng-container *ngIf="nextMovie && movieDetails[nextMovie.movie_id]">
+      <div class="absolute w-80 h-[600px] transform translate-y-4 opacity-70 rounded-lg shadow-lg">
+        <img
+          [src]="'https://image.tmdb.org/t/p/w500' + movieDetails[nextMovie.movie_id].poster_path"
+          [alt]="movieDetails[nextMovie.movie_id]?.title"
+          class="w-full h-full object-cover rounded-lg"
+        />
+        <div class="absolute bottom-0 left-0 right-0 bg-[var(--background)] bg-opacity-75 p-4 rounded-b-lg">
+          <h2 class="text-xl font-bold text-[var(--text)]">
+            {{ movieDetails[nextMovie.movie_id]?.title }}
+          </h2>
+        </div>
+      </div>
+    </ng-container>
 
-    <div class="relative w-80 h-[600px]" *ngIf="currentMovie as movie">
-      <div
-        class="absolute w-full h-full transition-transform duration-400 ease-out"
+    <ng-container *ngIf="currentMovie && movieDetails[currentMovie.movie_id]">
+      <div 
+        class="relative w-80 h-[600px] rounded-lg shadow-2xl transition-transform duration-400 ease-out"
         [ngClass]="{
           'animate-like': isAnimating && animationType === 'like',
           'animate-dislike': isAnimating && animationType === 'dislike'
         }"
       >
         <img
-          *ngIf="movieDetails[movie.movie_id]?.poster_path"
-          [src]="'https://image.tmdb.org/t/p/w500' + movieDetails[movie.movie_id].poster_path"
-          [alt]="movieDetails[movie.movie_id]?.title"
-          class="w-full h-full object-cover rounded-lg shadow-lg"
+          [src]="'https://image.tmdb.org/t/p/w500' + movieDetails[currentMovie.movie_id].poster_path"
+          [alt]="movieDetails[currentMovie.movie_id]?.title"
+          class="w-full h-full object-cover rounded-lg"
         />
         <div class="absolute bottom-0 left-0 right-0 bg-[var(--background)] bg-opacity-75 p-4 rounded-b-lg">
           <h2 class="text-xl font-bold text-[var(--text)]">
-            {{ movieDetails[movie.movie_id]?.title }}
+            {{ movieDetails[currentMovie.movie_id]?.title }}
           </h2>
           <p class="text-sm text-[var(--text)]">
-            {{ movieDetails[movie.movie_id]?.overview | slice:0:100 }}...
+            {{ movieDetails[currentMovie.movie_id]?.overview | slice:0:100 }}...
           </p>
         </div>
       </div>
-    </div>
-  
-    <div *ngIf="!currentMovie" class="text-white mt-4">
-      Aucun film à afficher (ou tous votés).
-    </div>
-  
+    </ng-container>
+
     <div class="mt-8 flex gap-10">
       <button
         (click)="onDislike()"
@@ -43,5 +54,6 @@
         <span class="text-2xl">&#10003;</span>
       </button>
     </div>
+
   </div>
-  
+</div>

@@ -7,9 +7,9 @@ from database import get_db
 from models.room import Room
 from models.roomMovie import RoomMovie
 from models.userRoom import UserRoom
-from schemas.room import RoomMovieCreate, RoomMovieOut, RoomMovieVote, RoomOut, RoomCreate
-from schemas.userRoom import UserRoomCreate, UserRoomOut, UserRoomNumber
-from schemas.users import UserId
+from schemas.room import *
+from schemas.userRoom import *
+from schemas.users import *
 from schemas.roomMovie import *
 from utils.room import get_unique_join_code
 

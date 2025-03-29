@@ -6,9 +6,9 @@ import { Observable } from 'rxjs';
 import { environment } from '../../../../environment';
 
 export interface Movie {
-  id: number;         // identifiant du RoomMovie en base
-  room_id: number;    // à quelle room ça appartient
-  movie_id: number;   // l'ID TMDB
+  id: number;
+  room_id: number;
+  movie_id: number;
   movie_index: number;
   nb_likes: number;
 }
@@ -22,7 +22,6 @@ export class MovieService {
   constructor(private http: HttpClient) {}
 
   getMoviesByRoom(roomId: number): Observable<Movie[]> {
-    console.log("ouais");
     return this.http.get<Movie[]>(`${this.apiUrl}/rooms/${roomId}/movies`);
   }
 
