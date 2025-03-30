@@ -11,7 +11,7 @@ import { ProfilSkeletonComponent } from './components/profil/profil-skeleton/pro
 import { RommSkeletonComponent } from './components/room/romm-skeleton/romm-skeleton.component';
 import { RoomResultComponent } from './components/room/room-result/room-result.component';
 import { RoomGuard } from './guards/roomGuard/room-guard.guard';
-import { HistoriqueComponent } from './historique/historique.component';
+import { HistoriqueComponent } from './components/historique/historique.component';
 
 
 export const routes: Routes = [
