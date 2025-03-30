@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
-import { UserServiceService } from '../../../services/user/user-service.service';
+import { UserService } from '../../../services/user/user.service';
 import { CommonModule } from '@angular/common';
 import { environment } from '../../../../../environment';
 
@@ -17,7 +17,7 @@ export class HeaderComponent implements OnInit {
   profilePicture: string | null = null;
   apiUrl = environment.apiUrl;
 
-  constructor(public userService: UserServiceService, private router: Router) {}
+  constructor(public userService: UserService, private router: Router) {}
 
   ngOnInit() {
     this.userService.user$.subscribe(user => {

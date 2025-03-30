@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { UserServiceService } from '../../services/user/user-service.service';
-import { Room } from '../../services/room/room-service.service';
+import { UserService } from '../../services/user/user.service';
+import { Room } from '../../services/room/room.service';
 
 @Component({
   selector: 'app-historique',
@@ -15,7 +15,7 @@ export class HistoriqueComponent implements OnInit {
   rooms: Room[] = [];
   userId: number = Number(localStorage.getItem('UserId'));
 
-  constructor(private userService: UserServiceService) {}
+  constructor( private userService: UserService ) {}
 
   ngOnInit(): void {
     if (this.userId) {

@@ -1,4 +1,4 @@
-import { Room } from '../room/room-service.service';
+import { Room } from '../room/room.service';
 import { Injectable } from '@angular/core';
 import { environment } from '../../../../environment';
 import { Router } from '@angular/router';
@@ -10,7 +10,7 @@ import { RoomStoreService } from '../room/room-store.service';
 @Injectable({
   providedIn: 'root'
 })
-export class UserServiceService {
+export class UserService {
   private apiUrl = `${environment.apiUrl}/users`;
   private userSubject = new BehaviorSubject<any>(null);
   public user$ = this.userSubject.asObservable();

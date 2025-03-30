@@ -1,9 +1,7 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { interval, Observable, switchMap } from 'rxjs';
+import { Observable } from 'rxjs';
 import { environment } from '../../../../environment';
-import { map } from 'rxjs/operators';
-
 
 export interface Room{
 id_admin: number;
@@ -39,7 +37,7 @@ export interface UserId{
 
 
 
-export class RoomServiceService {
+export class RoomService {
 
  private apiUrl = `${environment.apiUrl}/rooms`;
 

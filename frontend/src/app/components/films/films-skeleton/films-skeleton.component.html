@@ -1,6 +1,5 @@
 <div class="min-h-screen bg-[var(--background)]">
   <div class="container mx-auto p-6">
-    <!-- Header -->
     <header class="flex flex-col sm:flex-row items-center justify-between">
       <h1 class="text-4xl font-bold text-[var(--text)]">Mes Films</h1>
       <button 
@@ -10,7 +9,6 @@
       </button>
     </header>
 
-    <!-- Barre de recherche pour filtrer les films déjà ajoutés -->
     <div class="mt-6">
       <input 
         type="text" 
@@ -22,7 +20,6 @@
 
 
     
-    <!-- Grille des films ajoutés -->
     <section class="mt-8 sm:ml-20">
       <div class="w-full flex justify-center sm:justify-start flex-wrap gap-4">
         <app-films-card 
@@ -39,16 +36,14 @@
 
 
 
-  <!-- Modal d'ajout de film -->
   <div *ngIf="showAddMovieModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60">
     <div class="bg-white rounded-lg shadow-xl w-full max-w-3xl max-h-[90vh] overflow-y-auto p-6 relative">
-      <!-- Bouton de fermeture -->
+
       <button (click)="closeAddMovieModal()" class="absolute top-4 right-4 text-gray-600 hover:text-gray-800 text-3xl">
         &times;
       </button>
 
       <div class="space-y-6">
-        <!-- Mode Recherche -->
         <div *ngIf="!selectedMovie">
           <h2 class="text-2xl font-bold text-[var(--text)]">Ajouter un film</h2>
           <div class="mt-4">
@@ -66,7 +61,6 @@
               Rechercher
             </button>
           </div>
-          <!-- Résultats de la recherche -->
           <div *ngIf="searchResults?.length" class="mt-6">
             <h3 class="text-xl font-semibold text-[var(--text)] mb-4">Résultats</h3>
             <div class="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
@@ -90,7 +84,6 @@
           </div>
         </div>
 
-        <!-- Mode Détail -->
         <div *ngIf="selectedMovie">
           <h2 class="text-2xl font-bold text-[var(--text)] mb-4">{{ selectedMovie.title }}</h2>
           <div class="flex flex-col md:flex-row">
@@ -106,7 +99,6 @@
               <p class="text-sm text-gray-600">
                 Sorti le {{ selectedMovie.release_date }} | Durée : {{ selectedMovie.runtime }} min
               </p>
-              <!-- Slider pour ajuster la note -->
               <div class="flex items-center space-x-2">
                 <input 
                   type="range" 

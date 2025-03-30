@@ -15,7 +15,7 @@ export interface UserMovie {
 @Injectable({
   providedIn: 'root'
 })
-export class UserMovieServiceService {
+export class UserMovieService {
   private apiUrl = `${environment.apiUrl}/users`;
 
   constructor(private http: HttpClient) { }

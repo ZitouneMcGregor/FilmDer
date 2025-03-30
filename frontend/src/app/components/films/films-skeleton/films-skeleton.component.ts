@@ -2,15 +2,9 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { FilmsCardComponent } from '../films-card/films-card.component';
-import { UserMovieServiceService } from '../../../services/userMovie/user-movie-service.service';
-import { UserMovie } from '../../../services/userMovie/user-movie-service.service';
-import { TmdbServiceService } from '../../../services/tmdb/tmdb-service.service';
-
-interface Film {
-  image: string;
-  name: string;
-  note: number;
-}
+import { UserMovieService } from '../../../services/userMovie/user-movie.service';
+import { UserMovie } from '../../../services/userMovie/user-movie.service';
+import { TmdbService } from '../../../services/tmdb/tmdb.service';
  
 @Component({
   selector: 'app-films-skeleton',
@@ -31,8 +25,8 @@ export class FilmsSkeletonComponent {
   newNote: number = 0;
 
   constructor(
-    private tmdbService: TmdbServiceService,
-    private userMovieService: UserMovieServiceService
+    private tmdbService: TmdbService,
+    private userMovieService: UserMovieService
   ) {}
 
   ngOnInit(): void {
@@ -75,7 +69,6 @@ export class FilmsSkeletonComponent {
     this.newNote = 0;
   }
 
-  // Recherche des films sur TMDB
   searchMovies(): void {
     if (this.searchQuery.trim().length > 0) {
       this.tmdbService.searchMovies(this.searchQuery).subscribe({

@@ -6,9 +6,9 @@ import { PlaySkeletonComponent } from './components/play/play-skeleton/play-skel
 import { FilmsSkeletonComponent } from './components/films/films-skeleton/films-skeleton.component';
 import { AuthGuard } from './guards/authGuard/auth-guard.guard';
 import { LoginGuard } from './guards/loginGuard/login-guard.guard';
-import { RommPlayComponent } from './components/room/romm-play/romm-play.component';
+import { RoomPlayComponent } from './components/room/room-play/room-play.component';
 import { ProfilSkeletonComponent } from './components/profil/profil-skeleton/profil-skeleton.component';
-import { RommSkeletonComponent } from './components/room/romm-skeleton/romm-skeleton.component';
+import { RoomSkeletonComponent } from './components/room/room-skeleton/room-skeleton.component';
 import { RoomResultComponent } from './components/room/room-result/room-result.component';
 import { RoomGuard } from './guards/roomGuard/room-guard.guard';
 import { HistoriqueComponent } from './components/historique/historique.component';
@@ -20,7 +20,7 @@ export const routes: Routes = [
     { path: 'play', component: PlaySkeletonComponent, canActivate: [ AuthGuard ]},
     { path: 'films', component: FilmsSkeletonComponent, canActivate: [ AuthGuard ]},
     { path: 'profil', component: ProfilSkeletonComponent, canActivate: [ AuthGuard ]},
-    { path: 'room/:id', component: RommSkeletonComponent, canActivate:  [ AuthGuard, RoomGuard ]},
+    { path: 'room/:id', component: RoomSkeletonComponent, canActivate:  [ AuthGuard, RoomGuard ]},
     {path: 'result/:id', component: RoomResultComponent, canActivate: [AuthGuard]},
     {path: 'historique', component: HistoriqueComponent, canActivate: [AuthGuard]},
     { path: '',   redirectTo: '/home', pathMatch: 'full' },

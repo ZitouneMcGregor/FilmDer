@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
 import { HeaderComponent } from "./components/shared/header/header.component";
-import { UserServiceService } from './services/user/user-service.service';
+import { UserService } from './services/user/user.service';
 
 @Component({
   selector: 'app-root',
@@ -18,7 +18,7 @@ export class AppComponent implements OnInit {
 
 
   
-    constructor(private userService: UserServiceService, private router: Router) {}
+    constructor(private userService: UserService, private router: Router) {}
   
     ngOnInit(): void {
       const isLogged = this.userService.isLoggedIn();
