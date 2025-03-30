@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { RommPlayComponent } from './romm-play.component';
+import { RoomSkeletonComponent } from './room-skeleton.component';
 
-describe('RommPlayComponent', () => {
-  let component: RommPlayComponent;
-  let fixture: ComponentFixture<RommPlayComponent>;
+describe('RoomSkeletonComponent', () => {
+  let component: RoomSkeletonComponent;
+  let fixture: ComponentFixture<RoomSkeletonComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RommPlayComponent]
+      imports: [RoomSkeletonComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(RommPlayComponent);
+    fixture = TestBed.createComponent(RoomSkeletonComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

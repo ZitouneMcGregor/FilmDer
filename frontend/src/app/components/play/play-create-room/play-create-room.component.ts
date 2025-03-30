@@ -1,6 +1,6 @@
 import { Component, Output, EventEmitter } from '@angular/core';
-import { RoomServiceService } from '../../../services/room/room-service.service';
-import { Room } from '../../../services/room/room-service.service';  // Assurez-vous que cette importation est correcte
+import { RoomService } from '../../../services/room/room.service';
+import { Room } from '../../../services/room/room.service';  // Assurez-vous que cette importation est correcte
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { RoomStoreService } from '../../../services/room/room-store.service';
@@ -21,11 +21,11 @@ export class PlayCreateRoomComponent {
   name!: string;
   submitted = false;
 
-  @Output() roomCreated = new EventEmitter<string>();  // L'événement pour émettre le roomCode
-  @Output() cancelCreate = new EventEmitter<any>();  // L'événement pour émettre le roomCode
+  @Output() roomCreated = new EventEmitter<string>();
+  @Output() cancelCreate = new EventEmitter<any>();
 
 
-  constructor(private roomService: RoomServiceService, private roomStore: RoomStoreService) {}
+  constructor(private roomService: RoomService, private roomStore: RoomStoreService) {}
 
   onSubmit(): void {
     this.submitted = true; 

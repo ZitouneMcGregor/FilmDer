@@ -3,7 +3,7 @@ import { PlayCreateRoomComponent } from "../play-create-room/play-create-room.co
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { PlayRommListComponent } from "../play-room-list/play-room-list.component";
-import { RoomServiceService } from '../../../services/room/room-service.service';
+import { RoomService } from '../../../services/room/room.service';
 import { RoomStoreService } from '../../../services/room/room-store.service';
 
 @Component({
@@ -28,7 +28,7 @@ export class PlaySkeletonComponent {
   errorMessage = '';
 
   constructor(
-    private roomService: RoomServiceService,
+    private roomService: RoomService,
     private roomStore: RoomStoreService
   ) {}
 

@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgIf, NgFor } from '@angular/common';
-import { UserServiceService } from '../../../services/user/user-service.service'; // Remplacer ProfilService
+import { UserService } from '../../../services/user/user.service'; // Remplacer ProfilService
 import { environment } from '../../../../../environment';
 import { ProfilService } from '../../../services/profil/profil.service';
 
@@ -23,7 +23,7 @@ export class ProfilModifModalComponent implements OnInit {
   confirmPassword: string = '';
   profilePicture: string = '';
 
-  constructor(private userService: UserServiceService , private profilService: ProfilService) {} // Utiliser UserServiceService
+  constructor(private userService: UserService , private profilService: ProfilService) {}
 
   ngOnInit() {
     this.userService.getAvailablePhotos().subscribe({

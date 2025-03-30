@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ProfilModalComponent } from '../profil-modal/profil-modal.component';
 import { ProfilModifModalComponent } from '../profil-modif-modal/profil-modif-modal.component';
 import { ProfilService } from '../../../services/profil/profil.service';
-import { UserServiceService } from '../../../services/user/user-service.service';
+import { UserService } from '../../../services/user/user.service';
 
 @Component({
   selector: 'app-profil-skeleton',
@@ -17,7 +17,7 @@ export class ProfilSkeletonComponent implements OnInit {
   userId: number | null = null;
   user: any = {};
 
-  constructor(private profilService: ProfilService, private userService: UserServiceService) {}
+  constructor(private profilService: ProfilService, private userService: UserService) {}
 
   ngOnInit() {
     const storedUserId = localStorage.getItem('UserId');

@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { UserMovie, UserMovieServiceService } from '../../../services/userMovie/user-movie-service.service';
-import { TmdbServiceService } from '../../../services/tmdb/tmdb-service.service';
+import { UserMovie, UserMovieService } from '../../../services/userMovie/user-movie.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { TmdbService } from '../../../services/tmdb/tmdb.service';
 
 @Component({
   selector: 'app-films-card',
@@ -20,16 +20,14 @@ export class FilmsCardComponent {
   movieDetails: any = null;
   modalOpen: boolean = false;
 
-  // Pour la modification de la note
   editing: boolean = false;
   newNote: number = 0;
 
   constructor(
-    private tmdbService: TmdbServiceService,
-    private userMovieService: UserMovieServiceService
+    private tmdbService: TmdbService,
+    private userMovieService: UserMovieService
   ) {}
 
-  // Ouvre le modal d'info en appelant TMDB
   showInfo(): void {
     this.tmdbService.getMovieDetails(this.movie.movie_id).subscribe({
       next: details => {
@@ -48,7 +46,6 @@ export class FilmsCardComponent {
     this.movieDetails = null;
   }
 
-  // Gestion de l'édition de la note
   startEditing(): void {
     this.editing = true;
     this.newNote = this.movie.movie_rating;
@@ -60,7 +57,6 @@ export class FilmsCardComponent {
   }
 
   saveNote(): void {
-    // Pour satisfaire le backend, on renvoie les autres infos déjà présentes
     const updateData = {
       movie_img: this.movie.movie_img,
       movie_name: this.movie.movie_name,

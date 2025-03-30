@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { UserServiceService } from '../../../services/user/user-service.service';
+import { UserService } from '../../../services/user/user.service';
 
 @Component({
   selector: 'app-register-modal',
@@ -16,7 +16,7 @@ export class RegisterModalComponent {
   password: string = '';
   passwordConfirm: string = '';
 
-  constructor(private router: Router, private userService: UserServiceService) {}
+  constructor(private router: Router, private userService: UserService) {}
 
   
   @Output() switch = new EventEmitter<void>();

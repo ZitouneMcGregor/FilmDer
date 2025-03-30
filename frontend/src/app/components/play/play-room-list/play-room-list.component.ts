@@ -2,10 +2,10 @@ import {
   Component, Input, SimpleChanges, OnInit, OnChanges, OnDestroy, NgZone
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { UserServiceService } from '../../../services/user/user-service.service';
-import { RoomServiceService } from '../../../services/room/room-service.service';
+import { UserService } from '../../../services/user/user.service';
+import { RoomService } from '../../../services/room/room.service';
 import { RoomStoreService } from '../../../services/room/room-store.service';
-import { UserId } from '../../../services/room/room-service.service';
+import { UserId } from '../../../services/room/room.service';
 import { forkJoin, map, switchMap } from 'rxjs';
 import { Router, RouterModule } from '@angular/router';
 
@@ -25,8 +25,8 @@ export class PlayRommListComponent implements OnInit, OnChanges, OnDestroy {
   private pollingIntervalId: any;
 
   constructor(
-    private userService: UserServiceService,
-    private roomService: RoomServiceService,
+    private userService: UserService,
+    private roomService: RoomService,
     private roomStore: RoomStoreService,
     private ngZone: NgZone,
     private router: Router

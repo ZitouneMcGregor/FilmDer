@@ -1,15 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { RommPlayComponent } from '../romm-play/romm-play.component';
+import { RoomPlayComponent } from '../room-play/room-play.component';
 import { NgIf } from '@angular/common';
 @Component({
-  selector: 'app-romm-skeleton',
+  selector: 'app-room-skeleton',
   standalone: true,
-  imports: [RommPlayComponent, NgIf],
-  templateUrl: './romm-skeleton.component.html',
-  styleUrl: './romm-skeleton.component.css'
+  imports: [RoomPlayComponent, NgIf],
+  templateUrl: './room-skeleton.component.html',
+  styleUrl: './room-skeleton.component.css'
 })
-export class RommSkeletonComponent implements OnInit {
+export class RoomSkeletonComponent implements OnInit {
   roomId: number | undefined;
 
   constructor(private route: ActivatedRoute) {}

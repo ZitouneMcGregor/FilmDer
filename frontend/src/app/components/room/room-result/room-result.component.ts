@@ -1,9 +1,9 @@
 import { Component, NgZone, OnInit, OnDestroy } from '@angular/core';
-import { RoomServiceService, UserId } from '../../../services/room/room-service.service';
+import { RoomService, UserId } from '../../../services/room/room.service';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { MovieService } from '../../../services/movie/movie.service';
-import { TmdbServiceService } from '../../../services/tmdb/tmdb-service.service';
+import { TmdbService } from '../../../services/tmdb/tmdb.service';
 import { forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -22,14 +22,14 @@ export class RoomResultComponent implements OnInit, OnDestroy {
   private pollingIntervalId: any;
   nb_players!: number;
   nb_players_finished!: number;
-  ranking: any[] = []; // Contiendra les films avec leurs détails et nb_likes
+  ranking: any[] = [];
 
   constructor(
-    private roomService: RoomServiceService,  
+    private roomService: RoomService,  
     private route: ActivatedRoute, 
     private ngZone: NgZone, 
     private movieService: MovieService,
-    private tmdbService: TmdbServiceService
+    private tmdbService: TmdbService
   ) { }
 
   ngOnInit() {
