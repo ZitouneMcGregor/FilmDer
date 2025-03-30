@@ -56,6 +56,8 @@ Utilisez la commande suivante pour démarrer tous les services :
    docker-compose up --build
    ```
 Cela va lancer les services back, frontend, mysql et mongo.
+L'application est accessible depuis le navigateur sur http://localhost:8080.
+Les appels API se font sur http://localhost:8000.
 
 ---
 
