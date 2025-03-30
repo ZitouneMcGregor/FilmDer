@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of, BehaviorSubject } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
+import { RoomStoreService } from '../room/room-store.service';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +15,7 @@ export class UserServiceService {
   private userSubject = new BehaviorSubject<any>(null);
   public user$ = this.userSubject.asObservable();
 
-  constructor(private router: Router, private http: HttpClient) {
+  constructor(private router: Router, private http: HttpClient, private roomStore: RoomStoreService) {
     // Charge les données de l'utilisateur au démarrage si connecté
     if (this.isLoggedIn()) {
       const userId = this.getUserId();
@@ -41,9 +42,15 @@ export class UserServiceService {
     );
   }
 
+  setUser(user: any): void {
+    this.userSubject.next(user);
+  }
+  
+
   logout(): void {
     localStorage.removeItem("UserId");
     this.userSubject.next(null); // Réinitialise les données utilisateur
+    this.roomStore.setRooms([]);
     this.router.navigate(['/login']);
   }
 
@@ -118,6 +125,12 @@ export class UserServiceService {
   getRoomsByUserId(id: number): Observable<Room[]> {
     return this.http.get<Room[]>(`${this.apiUrl}/${id}/rooms`);
   }
+
+
+  getRoomsHistoByUserId(id: number): Observable<Room[]> {
+    return this.http.get<Room[]>(`${this.apiUrl}/${id}/rooms/histo`);
+  }
+  
 
 
 }

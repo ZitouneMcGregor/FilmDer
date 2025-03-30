@@ -45,13 +45,6 @@ async def get_movies(room_id: int, db: Session = Depends(get_db)):
 
     return room_movies
 
-@router.get("/{user_id}", response_model=List[RoomOut])
-async def get_rooms(user_id: int, db: Session = Depends(get_db)):
-    """
-    Récupère la liste de toutes les rooms
-    """
-    rooms = db.query(Room).join(UserRoom, Room.id == UserRoom.room_id).filter(UserRoom.user_id == user_id, Room.close == 0).all()
-    return rooms
 
 
 @router.post("/", response_model=RoomOut)

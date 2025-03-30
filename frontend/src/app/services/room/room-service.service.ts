@@ -2,6 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { interval, Observable, switchMap } from 'rxjs';
 import { environment } from '../../../../environment';
+import { map } from 'rxjs/operators';
 
 
 export interface Room{

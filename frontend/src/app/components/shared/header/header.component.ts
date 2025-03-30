@@ -34,6 +34,10 @@ export class HeaderComponent implements OnInit {
     });
   }
 
+  goToProfile(): void {
+    this.router.navigate(['/profil']);
+  }
+  
   toggleTheme(): void {
     this.isDark = !this.isDark;
     const root = document.documentElement;
