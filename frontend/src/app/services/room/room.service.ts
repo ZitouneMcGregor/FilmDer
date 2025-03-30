@@ -65,8 +65,8 @@ export class RoomService {
   }
 
 
-  stopGame(room_id: number, user_id: UserId): Observable<any> {
-    return this.http.put<UserId>(`${this.apiUrl}/${room_id}/stop`, user_id);
+  stopGame(room_id: number): Observable<any> {
+    return this.http.put<UserId>(`${this.apiUrl}/${room_id}/stop`, {});
   }
 
 
