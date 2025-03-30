@@ -1,8 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MovieService, Movie } from '../../../services/movie/movie.service';
 import { TmdbServiceService } from '../../../services/tmdb/tmdb-service.service';
+import { RoomServiceService } from '../../../services/room/room-service.service';
 
 @Component({
   selector: 'app-romm-play',
@@ -24,27 +25,50 @@ export class RommPlayComponent implements OnInit {
   isAnimating = false;
   animationType: 'like' | 'dislike' | '' = '';
 
+  // Flag pour indiquer que la room est terminée (stoppée)
+  isRoomTerminated = false;
+
   constructor(
     private movieService: MovieService,
     private tmdbService: TmdbServiceService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private router: Router,
+    private roomService: RoomServiceService
   ) {}
 
   ngOnInit() {
     this.route.paramMap.subscribe((params) => {
       this.roomId = Number(params.get('id'));
-      this.loadUserRoomAndMovies();
+      this.loadRoomAndUserData();
     });
   }
 
-  loadUserRoomAndMovies() {
-    this.movieService.getUserRoom(this.roomId, this.userId).subscribe({
-      next: (userRoom) => {
-        this.currentIndex = userRoom.index_film || 0;
-        this.loadMovies();
+  /**
+   * Vérifie d'abord l'état de la room via l'endpoint de Room.
+   * Si la room est fermée (close == 1), redirige directement vers les résultats.
+   * Sinon, récupère l'avancement de l'utilisateur (UserRoom.index_film) et charge les films.
+   */
+  loadRoomAndUserData() {
+    this.roomService.getRoom(this.roomId).subscribe({
+      next: (room) => {
+        if (room.close === 1) {
+          // La room est fermée : redirection immédiate
+          this.redirectToResults();
+          return;
+        }
+        // La room est ouverte, on récupère l'avancement de l'utilisateur
+        this.movieService.getUserRoom(this.roomId, this.userId).subscribe({
+          next: (userRoom) => {
+            this.currentIndex = userRoom.index_film || 0;
+            this.loadMovies();
+          },
+          error: (err) => {
+            console.error("Erreur: l'utilisateur n'est pas dans la room", err);
+          }
+        });
       },
       error: (err) => {
-        console.error("Erreur: l'utilisateur n'est pas dans la room", err);
+        console.error("Erreur: room not found", err);
       }
     });
   }
@@ -53,6 +77,7 @@ export class RommPlayComponent implements OnInit {
     this.movieService.getMoviesByRoom(this.roomId).subscribe({
       next: (movies) => {
         this.movies = movies;
+        // On charge les détails du film courant et du suivant.
         this.fetchMovieDetailsForIndex(this.currentIndex);
         this.fetchMovieDetailsForIndex(this.currentIndex + 1);
       },
@@ -61,7 +86,6 @@ export class RommPlayComponent implements OnInit {
       }
     });
   }
-
 
   fetchMovieDetailsForIndex(index: number) {
     if (index < this.movies.length) {
@@ -78,7 +102,6 @@ export class RommPlayComponent implements OnInit {
       }
     }
   }
-
 
   get currentMovie(): Movie | null {
     if (this.currentIndex < this.movies.length) {
@@ -119,10 +142,12 @@ export class RommPlayComponent implements OnInit {
               console.log("Vote enregistré:", response);
               this.currentIndex++;
 
+              // Charge les détails pour le prochain film si nécessaire.
               this.fetchMovieDetailsForIndex(this.currentIndex + 1);
 
+              // Si on a swipé tous les films ou que la room est terminée, on redirige.
               if (this.currentIndex >= this.movies.length) {
-                this.handleEndOfList();
+                this.redirectToResults();
               }
             },
             error: (err) => {
@@ -141,7 +166,24 @@ export class RommPlayComponent implements OnInit {
     }, 400);
   }
 
+  // Redirige l'utilisateur vers la page des résultats
+  redirectToResults() {
+    // On redirige vers /resultats/{roomId}
+    this.router.navigate(['/result', this.roomId]);
+  }
+
+  // Méthode pouvant être appelée par un autre composant (ex. via un service ou événement)
+  // lorsque l'admin arrête la room.
+  terminateRoom() {
+    this.isRoomTerminated = true;
+    // On force l'index à un niveau maximum pour ne plus tenter de charger de cartes.
+    this.currentIndex = this.movies.length;
+    this.redirectToResults();
+  }
+
+  // Fonction de gestion si tous les films ont été swipés
   handleEndOfList() {
-    alert("Plus de films à afficher !");
+    // Plutôt qu'un alert, on redirige directement vers les résultats.
+    this.redirectToResults();
   }
 }

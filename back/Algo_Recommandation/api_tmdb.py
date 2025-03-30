@@ -1,3 +1,4 @@
+from logging import log
 import requests
 
 URL = "https://api.themoviedb.org/3/movie/"

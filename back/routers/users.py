@@ -18,7 +18,7 @@ router = APIRouter()
 # Dossier contenant les photos existantes
 UPLOAD_DIR = os.path.abspath("uploads")
 os.makedirs(UPLOAD_DIR, exist_ok=True)
-logging.basicConfig(level=logging.DEBUG)
+# logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
 @router.get("/photos", response_model=List[str])
