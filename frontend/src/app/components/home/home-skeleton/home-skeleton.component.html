@@ -1,33 +1,30 @@
-<div class="flex h-screen bg-[var(--background)] relative">
+<div class="flex flex-col md:flex-row h-screen bg-[var(--background)] relative">
   <!-- Left Section -->
   <a routerLink="/play"
-    class="flex-[1] bg-[var(--primary)] hover:bg-[var(--accent)] text-[var(--text)] flex items-center justify-center  
-    focus:outline-none transition-all duration-300 hover:w-[40%]"
+    class="flex-1 bg-[var(--primary)] md:hover:bg-[var(--accent)] text-[var(--text)] flex items-center justify-center focus:outline-none transition-all duration-300 md:hover:w-[40%] p-6 md:p-0 md:bg-[var(--primary)] sm:bg-[var(--accent)]"
     (mouseenter)="updateText('match')"
     (mouseleave)="resetText()">
     <div class="text-center text-white">
-      <h1 class="font-bold text-5xl mb-10 animate-bounce">🎬 Match</h1>
-      <p>Trouvez le Film Parfait Entre Amis</p>
+      <h1 class="font-bold text-4xl md:text-5xl mb-5 md:mb-10 animate-bounce">🎬 Match</h1>
+      <p class="text-sm md:text-base">Trouvez le Film Parfait Entre Amis</p>
     </div>
   </a>
 
-  <!-- Middle Section -->
-  <div class="flex-[1] bg-[var(--accent)] hover:bg-[var(--primary)] text-[var(--text)] flex items-center justify-center  
-    focus:outline-none transition-all duration-300 hover:w-[50%]">
-    <div class="flex-col text-center text-white p-10 transition-all duration-300">
-      <div [innerHTML]="middleText"></div>
+  <!-- Middle Section (Hidden on Mobile) -->
+  <div class="hidden md:flex flex-1 bg-[var(--accent)] hover:bg-[var(--primary)] text-[var(--text)] items-center justify-center focus:outline-none transition-all duration-300 md:hover:w-[50%] p-10">
+    <div class="text-center text-white">
+      <div [innerHTML]="middleText" class="text-lg"></div>
     </div>
   </div>
 
   <!-- Right Section -->
   <a routerLink="/films"
-    class="flex-[1] bg-[var(--primary)] hover:bg-[var(--accent)] text-[var(--text)] flex items-center justify-center  
-    focus:outline-none transition-all duration-300 hover:w-[40%]"
+    class="flex-1 bg-[var(--secondary)] md:hover:bg-[var(--accent)] text-[var(--text)] flex items-center justify-center focus:outline-none transition-all duration-300 md:hover:w-[40%] p-6 md:p-0 md:bg-[var(--primary)] sm:bg-[var(--secondary)]"
     (mouseenter)="updateText('films')"
     (mouseleave)="resetText()">
     <div class="text-center text-white">
-      <h1 class="font-bold text-5xl mb-10 animate-bounce">📽️ FILMS</h1>
-      <p>Gérez Votre Bibliothèque Cinématographique</p>
+      <h1 class="font-bold text-4xl md:text-5xl mb-5 md:mb-10 animate-bounce">📽️ FILMS</h1>
+      <p class="text-sm md:text-base">Gérez Votre Bibliothèque Cinématographique</p>
     </div>
   </a>
 </div>
