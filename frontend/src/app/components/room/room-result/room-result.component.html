@@ -16,3 +16,82 @@
     </ng-container>
   </div>
 </div>
+
+<!-- Affichage de l'écran de résultats une fois la salle terminée -->
+<div *ngIf="isRoomTerminated && ranking && ranking.length" class="min-h-screen bg-gray-100 p-8">
+  <h2 class="text-3xl font-bold mb-12 text-center">Résultats de la partie 🏆</h2>
+  
+<!-- Podium pour le top 3 en style podium avec espacement accru -->
+<div *ngIf="ranking.length >= 3" class="flex justify-center mb-12 space-x-8">
+  <!-- 2ème place -->
+  <div class="flex flex-col items-center transform translate-y-2 scale-[1.05]">
+    <div class="rounded-lg border-4 border-gray-300 overflow-hidden max-w-[250px]">
+      <img 
+        [src]="'https://image.tmdb.org/t/p/w500' + ranking[1]?.details.poster_path"
+        [alt]="ranking[1]?.details.title" 
+        class="object-contain w-full">
+    </div>
+    <p class="mt-4 font-semibold text-center">🥈 {{ ranking[1]?.details.title }}</p>
+    <p class="text-sm text-center">{{ ranking[1]?.nb_likes }} Likes</p>
+    <span class="text-xs">2ème</span>
+  </div>
+  
+  <!-- 1ère place -->
+  <div class="flex flex-col items-center transform translate-y-0 scale-[1.15]">
+    <div class="rounded-lg border-4 border-yellow-400 overflow-hidden max-w-[250px]">
+      <img 
+        [src]="'https://image.tmdb.org/t/p/w500' + ranking[0]?.details.poster_path"
+        [alt]="ranking[0]?.details.title" 
+        class="object-contain w-full">
+    </div>
+    <p class="mt-4 font-bold text-center">🥇 {{ ranking[0]?.details.title }}</p>
+    <p class="text-sm text-center">{{ ranking[0]?.nb_likes }} Likes</p>
+    <span class="text-xs">1er</span>
+  </div>
+  
+  <!-- 3ème place -->
+  <div class="flex flex-col items-center transform translate-y-4 scale-[0.95]">
+    <div class="rounded-lg border-4 border-[#cd7f32] overflow-hidden max-w-[250px]">
+      <img 
+        [src]="'https://image.tmdb.org/t/p/w500' + ranking[2]?.details.poster_path"
+        [alt]="ranking[2]?.details.title" 
+        class="object-contain w-full">
+    </div>
+    <p class="mt-4 font-semibold text-center">🥉 {{ ranking[2]?.details.title }}</p>
+    <p class="text-sm text-center">{{ ranking[2]?.nb_likes }} Likes</p>
+    <span class="text-xs">3ème</span>
+  </div>
+</div>
+
+<!-- Liste complète du classement -->
+<div *ngIf="ranking.length > 3" class="max-w-4xl mx-auto">
+  <h3 class="text-2xl font-semibold mb-4 text-center">Classement complet</h3>
+  <ul>
+    <li *ngFor="let movie of ranking; let i = index" class="flex items-center justify-between py-2 border-b">
+      <div class="flex items-center space-x-4">
+        <span class="w-6 text-center">{{ i + 1 }}</span>
+        <div class="w-12 h-12 rounded-full overflow-hidden">
+          <img 
+            [src]="'https://image.tmdb.org/t/p/w500' + movie.details.poster_path" 
+            [alt]="movie.details.title" 
+            class="object-cover w-full h-full">
+        </div>
+        <div>
+          <p class="font-semibold">
+            <span *ngIf="i === 0">🥇</span>
+            <span *ngIf="i === 1">🥈</span>
+            <span *ngIf="i === 2">🥉</span>
+            {{ movie.details.title }}
+          </p>
+          <p class="text-sm text-gray-600">{{ movie.nb_likes }} Likes</p>
+        </div>
+      </div>
+    </li>
+  </ul>
+</div>
+
+
+<div *ngIf="isRoomTerminated && (!ranking || ranking.length === 0)" class="min-h-screen flex items-center justify-center bg-gray-100">
+  <p class="text-2xl font-semibold">Aucun résultat à afficher.</p>
+</div>
+

@@ -125,4 +125,10 @@ export class UserServiceService {
   }
 
 
+  getRoomsHistoByUserId(id: number): Observable<Room[]> {
+    return this.http.get<Room[]>(`${this.apiUrl}/${id}/rooms/histo`);
+  }
+  
+
+
 }

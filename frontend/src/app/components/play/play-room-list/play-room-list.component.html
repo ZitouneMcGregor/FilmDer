@@ -5,9 +5,19 @@
 
 <!-- Si pas d'erreur, on affiche la section "Vos parties" -->
 <div *ngIf="!error" class="max-w-10xl mx-auto bg-white shadow-md rounded-lg p-6">
-  <h2 class="text-3xl font-bold text-center mb-6 text-[var(--text)] ">
-    Vos parties
-  </h2>
+  <div class="relative mb-6">
+    <h2 class="text-3xl font-bold text-[var(--text)] text-center">
+      Vos parties
+    </h2>
+    <button 
+      [routerLink]="['/historique']"
+      class="absolute right-0 top-1/2 transform -translate-y-1/2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
+    >
+      Historique
+    </button>
+  </div>
+  
+
 
   <!-- Cas A: Aucune partie -->
   <div *ngIf="rooms && rooms.length === 0" class="text-center text-gray-500">
@@ -118,4 +128,7 @@
       </tbody>
     </table>
   </div>
+
+
+  
 </div>

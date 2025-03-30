@@ -18,7 +18,7 @@ router = APIRouter()
 # Dossier contenant les photos existantes
 UPLOAD_DIR = os.path.abspath("uploads")
 os.makedirs(UPLOAD_DIR, exist_ok=True)
-logging.basicConfig(level=logging.DEBUG)
+#logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
 @router.get("/photos", response_model=List[str])
@@ -171,4 +171,10 @@ async def delete_user_movie(user_id: int, movie_id: int, db: Session = Depends(g
 async def get_rooms(user_id: int, db: Session = Depends(get_db)):
     rooms = db.query(Room).join(UserRoom, Room.id == UserRoom.room_id).filter(UserRoom.user_id == user_id, Room.close == 0).all()
     return rooms
+
+@router.get("/{user_id}/rooms/histo", response_model=List[RoomOut])
+async def get_rooms_histo(user_id: int, db: Session = Depends(get_db)):
+    rooms = db.query(Room).join(UserRoom, Room.id == UserRoom.room_id).filter(UserRoom.user_id == user_id, Room.close == 1).all()
+    return rooms
+
 

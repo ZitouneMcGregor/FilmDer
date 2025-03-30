@@ -7,12 +7,12 @@ import { RoomServiceService } from '../../../services/room/room-service.service'
 import { RoomStoreService } from '../../../services/room/room-store.service';
 import { UserId } from '../../../services/room/room-service.service';
 import { forkJoin, map, switchMap } from 'rxjs';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-play-romm-list',
   standalone: true,
-  imports: [ CommonModule ],
+  imports: [ CommonModule, RouterModule ],
   templateUrl: './play-room-list.component.html',
   styleUrls: ['./play-room-list.component.css']
 })
