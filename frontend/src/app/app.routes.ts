@@ -11,6 +11,7 @@ import { ProfilSkeletonComponent } from './components/profil/profil-skeleton/pro
 import { RommSkeletonComponent } from './components/room/romm-skeleton/romm-skeleton.component';
 import { RoomResultComponent } from './components/room/room-result/room-result.component';
 import { RoomGuard } from './guards/roomGuard/room-guard.guard';
+import { HistoriqueComponent } from './historique/historique.component';
 
 
 export const routes: Routes = [
@@ -20,7 +21,8 @@ export const routes: Routes = [
     { path: 'films', component: FilmsSkeletonComponent, canActivate: [ AuthGuard ]},
     { path: 'profil', component: ProfilSkeletonComponent, canActivate: [ AuthGuard ]},
     { path: 'room/:id', component: RommSkeletonComponent, canActivate:  [ AuthGuard, RoomGuard ]},
-     {path: 'result/:id', component: RoomResultComponent, canActivate: [AuthGuard]},
+    {path: 'result/:id', component: RoomResultComponent, canActivate: [AuthGuard]},
+    {path: 'historique', component: HistoriqueComponent, canActivate: [AuthGuard]},
     { path: '',   redirectTo: '/home', pathMatch: 'full' },
     { path: '**', component: NotFoundComponent }
     
