@@ -8,6 +8,20 @@
   <div class="relative mb-6">
     <h2 class="text-3xl font-bold text-[var(--text)] text-center">
       Vos parties
+      <button class="relative group">
+        <span class="text-xl text-[var(--primary)]">ℹ️</span>
+        <div 
+          class="absolute left-1/2 transform -translate-x-1/2 bottom-8 w-64 p-3 bg-[var(--background)] text-[var(--text)] text-sm shadow-lg rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+        >
+          <p class="font-semibold">Vos Parties</p>
+          <ul class="list-disc pl-4 mt-2">
+            <li>Démarrez une partie déjà créée</li>
+            <li>Gérez les participants et modifiez les paramètres</li>
+            <li>Votez et choisissez ensemble le film à regarder</li>
+          </ul>
+        </div>
+      </button>
+      
     </h2>
     <button 
       [routerLink]="['/historique']"
