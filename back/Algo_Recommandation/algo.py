@@ -64,11 +64,11 @@ def algo_recommandation_film(room_id: int, db: Session, nb_film: int = 10):
 
     #Pour chaque film séléctionner on récupérer tout les films que tmdb nous recommande, tant qu'on as pas nb film on change de page
     # si jamais y'a plus de page securité nous fais sortir
-    while (len(set(recommended_movies))< nb_film) or not securite:
+    while (len(set(recommended_movies))< nb_film) and not securite:
         for liked_movie in liked_movies:
             recos = get_recommandation(liked_movie, page=page).get('results', [])
 
-            if not recos:
+            if (not recos or len(recos[0]) == 0):
                 securite = True
             for reco in recos:
                 reco_id = reco['id']
