@@ -6,7 +6,7 @@ import { UserService } from '../../../services/user/user.service';
 import { RoomService } from '../../../services/room/room.service';
 import { RoomStoreService } from '../../../services/room/room-store.service';
 import { UserId } from '../../../services/room/room.service';
-import { forkJoin, map, switchMap } from 'rxjs';
+import { forkJoin, map, of, switchMap } from 'rxjs';
 import { Router, RouterModule } from '@angular/router';
 
 @Component({
@@ -72,6 +72,10 @@ export class PlayRommListComponent implements OnInit, OnChanges, OnDestroy {
     this.userService.getRoomsByUserId(this.userId)
       .pipe(
         switchMap((rooms: any[]) => {
+          if (rooms.length == 0) {
+            return of([]);
+          }
+    
           const observables = rooms.map(room => 
             this.roomService.getNbPlayers(room.id).pipe(
               map(playersData => {
@@ -80,7 +84,7 @@ export class PlayRommListComponent implements OnInit, OnChanges, OnDestroy {
               })
             )
           );
-  
+    
           return forkJoin(observables);
         })
       )
@@ -93,6 +97,7 @@ export class PlayRommListComponent implements OnInit, OnChanges, OnDestroy {
         }
       });
   }
+  
 
   onStartRoom(room: any): void {
     if (room.id_admin !== this.userId) {

@@ -52,6 +52,11 @@ export class RoomPlayComponent implements OnInit {
         this.movieService.getUserRoom(this.roomId, this.userId).subscribe({
           next: (userRoom) => {
             this.currentIndex = userRoom.index_film || 0;
+            if(this.currentIndex >= room.nb_film) {
+              this.redirectToResults();
+              return;
+            }
+
             this.loadMovies();
           },
           error: (err) => {
@@ -136,7 +141,30 @@ export class RoomPlayComponent implements OnInit {
               this.fetchMovieDetailsForIndex(this.currentIndex + 1);
 
               if (this.currentIndex >= this.movies.length) {
-                this.redirectToResults();
+
+                this.roomService.getNbPlayers(this.roomId)
+                  .subscribe({
+                    next: (userRoomNumber) => {
+                      if (userRoomNumber.nb_players_finished === userRoomNumber.nb_players) {
+                        this.roomService.stopGame(this.roomId)
+                          .subscribe({
+                            next: (response) => {
+                              console.log("Fin de la partie:", response);
+                              this.redirectToResults();
+
+                            }
+                          });
+                        
+                      }else{
+                        this.redirectToResults();
+                      }
+                    },
+                    error: (err) => {
+                      console.error("Erreur lors de la récupération du nombre de joueurs:", err);
+                    }
+                  });
+
+
               }
             },
             error: (err) => {
@@ -159,12 +187,6 @@ export class RoomPlayComponent implements OnInit {
     this.router.navigate(['/result', this.roomId]);
   }
 
-
-  terminateRoom() {
-    this.isRoomTerminated = true;
-    this.currentIndex = this.movies.length;
-    this.redirectToResults();
-  }
 
   handleEndOfList() {
     this.redirectToResults();

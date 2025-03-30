@@ -85,8 +85,7 @@ export class RoomResultComponent implements OnInit, OnDestroy {
       console.warn('Vous n’êtes pas admin de cette partie');
       return;
     }
-    const userId: UserId = { id: this.userId };
-    this.roomService.stopGame(this.roomId, userId).subscribe({
+    this.roomService.stopGame(this.roomId).subscribe({
       next: (response) => {
         console.log("Salle terminée", response);
         this.isRoomTerminated = true;

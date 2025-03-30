@@ -5,6 +5,8 @@ import { CommonModule } from '@angular/common';
 import { PlayRommListComponent } from "../play-room-list/play-room-list.component";
 import { RoomService } from '../../../services/room/room.service';
 import { RoomStoreService } from '../../../services/room/room-store.service';
+import { UserService } from '../../../services/user/user.service';
+import { forkJoin, map, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-play-skeleton',
@@ -29,7 +31,8 @@ export class PlaySkeletonComponent {
 
   constructor(
     private roomService: RoomService,
-    private roomStore: RoomStoreService
+    private roomStore: RoomStoreService,
+    private userService: UserService
   ) {}
 
   onSubmit(): void {
@@ -44,7 +47,7 @@ export class PlaySkeletonComponent {
         }).subscribe({
           next: (data) => {
             // Tout va bien : on ajoute la room au store
-            this.roomStore.addRoom(room);
+            this.fetchRooms();
           },
           error: (err) => {
             // Room trouvée, mais l'erreur survient au moment de joinRoom
@@ -94,5 +97,29 @@ export class PlaySkeletonComponent {
 
   closeModal(): void {
     this.showModal = false;
+  }
+
+   fetchRooms(): void {    
+      this.userService.getRoomsByUserId(Number(localStorage.getItem('UserId')))
+        .pipe(
+          switchMap((rooms: any[]) => {
+            const observables = rooms.map(room => 
+              this.roomService.getNbPlayers(room.id).pipe(
+                map(playersData => {
+                  room.currentPlayers = playersData.nb_players;
+                  return room;
+                })
+              )
+            );
+    
+            return forkJoin(observables);
+          })
+        )
+        .subscribe({
+          next: (updatedRooms) => {
+            this.roomStore.setRooms(updatedRooms);
+          },
+ 
+    })
   }
 }

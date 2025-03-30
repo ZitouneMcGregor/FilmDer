@@ -140,7 +140,7 @@ async def start_room(room_id: int, user_id: UserId, db: Session = Depends(get_db
 
 
 @router.put("/{room_id}/stop", response_model=RoomOut)
-async def stop_room(user_id: UserId, room_id: int, db: Session = Depends(get_db)):
+async def stop_room(room_id: int, db: Session = Depends(get_db)):
     """
     start la room
     """
@@ -148,8 +148,6 @@ async def stop_room(user_id: UserId, room_id: int, db: Session = Depends(get_db)
     room = db.query(Room).filter(Room.id == room_id).first()
     if room is None:
         raise HTTPException(status_code=404, detail="Room not found")
-    if room.id_admin != user_id.id:
-        raise HTTPException(status_code=403, detail="Tu n'es pas admin mon coco :)")
 
     room.close = 1
     db.commit()
@@ -228,6 +226,7 @@ async def vote_movie(room_id: int, vote: RoomMovieVote, db: Session = Depends(ge
         movie.nb_likes += 1
 
     user_room.index_film += 1
+
 
     db.commit()
     db.refresh(movie)
