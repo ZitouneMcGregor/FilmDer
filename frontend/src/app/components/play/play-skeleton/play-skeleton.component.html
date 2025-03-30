@@ -6,7 +6,22 @@
     <!-- Section gauche: Join Room -->
     <div class="flex flex-col justify-between w-1/2 p-6 bg-[var(--background)] rounded-lg shadow-lg text-center">
       <div>
-        <h2 class="text-3xl font-bold mb-6 text-[var(--text)]">Rejoindre</h2>
+        <h2 class="text-3xl font-bold mb-6 text-[var(--text)]">Rejoindre
+
+          <button class="relative group">
+            <span class="text-xl text-[var(--primary)]">ℹ️</span>
+            <div 
+              class="absolute left-1/2 transform -translate-x-1/2 bottom-8 w-64 p-3 bg-[var(--background)] text-[var(--text)] text-sm shadow-lg rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+            >
+              <p class="font-semibold">Rejoindre une Partie</p>
+              <ul class="list-disc pl-4 mt-2">
+                <li>Entrez le code à 6 caractères fourni par l’hôte</li>
+                <li>Accédez à la sélection de films générée pour le groupe</li>
+              </ul>
+            </div>
+          </button>
+          
+        </h2>
         <div *ngIf="errorMessage" class="mb-4 text-red-500 font-semibold">
           {{ errorMessage }}
         </div>
@@ -42,7 +57,22 @@
     <!-- Section droite: Create Room -->
     <div class="flex flex-col justify-between w-1/2 p-6 bg-[var(--background)] rounded-lg shadow-lg text-center">
       <div>
-        <h2 class="text-3xl font-bold mb-6 text-[var(--text)]">Créer une partie</h2>
+        <h2 class="text-3xl font-bold mb-6 text-[var(--text)]">Créer une partie
+
+          <button class="relative group">
+            <span class="text-xl text-[var(--primary)]">ℹ️</span>
+            <div 
+              class="absolute left-1/2 transform -translate-x-1/2 bottom-8 w-64 p-3 bg-[var(--background)] text-[var(--text)] text-sm shadow-lg rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+            >
+              <p class="font-semibold">Créer une Partie</p>
+              <ul class="list-disc pl-4 mt-2">
+                <li>Définissez les règles et critères de sélection des films</li>
+                <li>Invitez vos amis en partageant le code de la partie</li>
+              </ul>
+            </div>
+          </button>
+          
+        </h2>
       </div>
       <div>
         <button
