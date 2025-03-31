@@ -1,6 +1,7 @@
-# Filmder Application
+# Filmder
 
 Filmder est une application web full-stack permettant de gérer des parties de visionnage de films, de voter et d'obtenir des recommandations de films. L’application est entièrement dockerisée pour simplifier son déploiement.
+Elle a été développée avec le Framework Angular pour le front, une API FastAPI en Python pour le back, une base de données MySQL pour l'application et une base de données MongoDB pour les logs.
 
 ---
 
