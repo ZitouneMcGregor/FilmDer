@@ -28,7 +28,12 @@ export class PlayCreateRoomComponent {
   constructor(private roomService: RoomService, private roomStore: RoomStoreService) {}
 
   onSubmit(): void {
-    this.submitted = true; 
+    this.submitted = true;
+    
+    if (this.nb_film < 5 || this.nb_film > 50) {
+      console.error('Le nombre de films doit être compris entre 5 et 50.');
+      return;
+    }
 
     if (!this.name || !this.nb_player || !this.nb_film) {
       console.error('Tous les champs doivent être remplis.');

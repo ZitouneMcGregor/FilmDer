@@ -66,17 +66,18 @@
         name="nb_film"
         [(ngModel)]="nb_film"
         required
-        min="1"
+        min="5"
+        max="50"
         #nbFilmInput="ngModel"
         class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none"
         [ngClass]="{
           'border-gray-300 focus:ring-[var(--primary)] focus:border-[var(--primary)]': nbFilmInput.valid || (!submitted && nbFilmInput.pristine),
           'border-red-500 focus:ring-red-500 focus:border-red-500': (nbFilmInput.invalid && nbFilmInput.dirty) || (submitted && nbFilmInput.invalid)
         }"
-        placeholder="Nombre de films"
+        placeholder="Nombre de films (entre 5 et 50)"
       />
       <p *ngIf="(nbFilmInput.invalid && nbFilmInput.dirty) || (submitted && nbFilmInput.invalid)" class="text-red-500 text-xs mt-1">
-        Le nombre de films est requis et doit être supérieur à 0.
+        Le nombre de films est requis et doit être compris entre 5 et 50.
       </p>
     </div>
 
